@@ -57,6 +57,13 @@
                     </a>
                 </li>
 
+                <li class="dash-item">
+                    <a href="{{ route('works.index') }}" class="dash-link">
+                        <span class="dash-micon"><i class="ti ti-users"></i></span>
+                        <span class="dash-mtext">{{ __('Works') }}</span>
+                    </a>
+                </li>
+
           
             <!--dashboard-->
 

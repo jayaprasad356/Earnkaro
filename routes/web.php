@@ -17,6 +17,7 @@ use App\Http\Controllers\CoinsController;
 use App\Http\Controllers\UserCallsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\CustomLoginController;
+use App\Http\Controllers\WorksController;
 
 // use App\Http\Controllers\PlanRequestController;
 
@@ -48,4 +49,8 @@ Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard')->m
 Route::get('/level1List', [UsersController::class, 'level1List'])->name('level_1.index');
 Route::get('/level2List', [UsersController::class, 'level2List'])->name('level_2.index');
 Route::get('/level3List', [UsersController::class, 'level3List'])->name('level_3.index');
+// Show Works List Page with Upload Form
+Route::get('/works', [WorksController::class, 'index'])->name('works.index');
 
+// Handle Image Upload (POST)
+Route::post('/works/upload', [WorksController::class, 'uploadImage'])->name('works.upload');
