@@ -18,6 +18,8 @@ use App\Http\Controllers\UserCallsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\CustomLoginController;
 use App\Http\Controllers\WorksController;
+use App\Http\Controllers\NewsController;
+use App\Http\Controllers\InactiveUsersController;
 
 // use App\Http\Controllers\PlanRequestController;
 
@@ -49,8 +51,21 @@ Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard')->m
 Route::get('/level1List', [UsersController::class, 'level1List'])->name('level_1.index');
 Route::get('/level2List', [UsersController::class, 'level2List'])->name('level_2.index');
 Route::get('/level3List', [UsersController::class, 'level3List'])->name('level_3.index');
-// Show Works List Page with Upload Form
+Route::get('/level4List', [UsersController::class, 'level4List'])->name('level_4.index');
+Route::get('/news', [NewsController::class, 'invite_friends'])->name('invite_friends.index');
+Route::get('/inactive-users', [InactiveUsersController::class, 'index'])->name('inactive_users.index');
+Route::post('/inactive-users/activate/{id}', [InactiveUsersController::class, 'activate'])->name('inactive_users.activate');
+Route::get('/inactive-users/activate', [InactiveUsersController::class, 'activate'])->name('inactive_users.activate');
+Route::get('/inactive-users/activate-level', [InactiveUsersController::class, 'showActivationPage'])->name('inactive_users.showActivationPage');
+Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
 Route::get('/works', [WorksController::class, 'index'])->name('works.index');
+Route::get('/withdrawals', [WithdrawalsController::class, 'index'])->name('withdrawals.index');
+Route::patch('/withdrawals/bulk-update-status', [WithdrawalsController::class, 'bulkUpdateStatus'])->name('withdrawals.bulkUpdateStatus');
+Route::patch('/withdrawals/bulk-cancel', [WithdrawalsController::class, 'bulkCancelStatus'])->name('withdrawals.bulkCancelStatus');
+Route::get('withdrawals/export', [WithdrawalsController::class, 'export'])->name('withdrawals.export');
+Route::put('withdrawals/{id}', [WithdrawalsController::class, 'update'])->name('withdrawals.update');
+Route::resource('withdrawals', WithdrawalsController::class);
 
+Route::get('/inactive-users/get-level-users', [InactiveUsersController::class, 'getLevelUsers'])->name('inactive_users.getLevelUsers');
 // Handle Image Upload (POST)
 Route::post('/works/upload', [WorksController::class, 'uploadImage'])->name('works.upload');

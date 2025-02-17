@@ -31,19 +31,19 @@
                                         <div class="theme-avtar bg-success">
                                             <i class="ti ti-wallet"></i>
                                         </div>
-                                        <div class="ms-3">
-                                            <small class="text-muted"><?php echo e(__('Total')); ?></small>
-                                            <h6 class="m-0"><?php echo e(__('Income')); ?></h6>
+                                        <div class="ms-2">
+                                            <small class="text-muted"><?php echo e(__('Monthly')); ?></small>
+                                            <h6 class="m-0"><?php echo e(__('Salery')); ?></h6>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <h4 class="m-0 text-success"><?php echo e(number_format($total_income, 2)); ?></h4>
+                                    <h4 class="m-0 text-success"><?php echo e(number_format($monthly_salery, 2)); ?></h4>
                                 </div>
                             </div>
                             <div class="text-center mt-3">
                                 <a  class="btn btn-success">
-                                    <?php echo e(__('Enter Amount')); ?>
+                                    <?php echo e(__('Add to Withdrawals')); ?>
 
                                 </a>
                             </div>
@@ -61,19 +61,19 @@
                                         <div class="theme-avtar bg-info">
                                             <i class="ti ti-credit-card"></i>
                                         </div>
-                                        <div class="ms-3">
-                                            <small class="text-muted"><?php echo e(__('Current')); ?></small>
-                                            <h6 class="m-0"><?php echo e(__('Balance')); ?></h6>
+                                        <div class="ms-2">
+                                            <small class="text-muted"><?php echo e(__('Level')); ?></small>
+                                            <h6 class="m-0"><?php echo e(__('Income')); ?></h6>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <h4 class="m-0 text-info"><?php echo e(number_format($balance, 2)); ?></h4>
+                                    <h4 class="m-0 text-info"><?php echo e(number_format($level_income, 2)); ?></h4>
                                 </div>
                             </div>
                             <div class="text-center mt-3">
                                 <a class="btn btn-info">
-                                    <?php echo e(__('Enter Amount')); ?>
+                                    <?php echo e(__('Add to Withdrawals')); ?>
 
                                 </a>
                             </div>
@@ -91,19 +91,49 @@
                                         <div class="theme-avtar bg-warning">
                                             <i class="ti ti-receipt"></i>
                                         </div>
-                                        <div class="ms-3">
-                                            <small class="text-muted"><?php echo e(__('Total')); ?></small>
-                                            <h6 class="m-0"><?php echo e(__('Recharges')); ?></h6>
+                                        <div class="ms-2">
+                                            <small class="text-muted"><?php echo e(__('Refer')); ?></small>
+                                            <h6 class="m-0"><?php echo e(__('Income')); ?></h6>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <h4 class="m-0 text-warning"><?php echo e(number_format($recharge_value, 2)); ?></h4>
+                                    <h4 class="m-0 text-warning"><?php echo e(number_format($refer_income, 2)); ?></h4>
                                 </div>
                             </div>
                             <div class="text-center mt-3">
                                 <a  class="btn btn-warning">
-                                    <?php echo e(__('Enter Amount')); ?>
+                                    <?php echo e(__('Add to Withdrawals')); ?>
+
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                   <!-- Balance Box -->
+                   <div class="col-lg-4 col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center justify-content-between">
+                                <div class="col-auto mb-3 mb-sm-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="theme-avtar bg-danger">
+                                            <i class="ti ti-credit-card"></i>
+                                        </div>
+                                        <div class="ms-2">
+                                            <small class="text-muted"><?php echo e(__('Whatsapp Status ')); ?></small>
+                                            <h6 class="m-0"><?php echo e(__('Income')); ?></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto text-end">
+                                    <h4 class="m-0 text-danger"><?php echo e(number_format($whatsapp_status_income, 2)); ?></h4>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a class="btn btn-danger">
+                                    <?php echo e(__('Add to Withdrawals')); ?>
 
                                 </a>
                             </div>

@@ -53,11 +53,12 @@ class HomeController extends Controller
         $user = Users::where('id', $userId)->first();
     
         // Fetch financial details (modify according to your database structure)
-        $total_income = $user->total_income ?? 0;
-        $balance = $user->balance ?? 0; // User balance
-        $recharge_value = $user->recharge ?? 0;
+        $monthly_salery = $user->monthly_salery ?? 0;
+        $level_income = $user->level_income ?? 0; // User balance
+        $whatsapp_status_income = $user->whatsapp_status_income ?? 0;
+        $refer_income = $user->refer_income ?? 0;
     
-        return view('dashboard.dashboard', compact('total_income', 'balance', 'recharge_value'));
+        return view('dashboard.dashboard', compact('monthly_salery', 'level_income', 'whatsapp_status_income','refer_income'));
     }
     
 

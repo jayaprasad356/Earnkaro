@@ -65,7 +65,8 @@ class AuthController extends Controller
         $columnMap = [
             'b' => 'referred_by',
             'c' => 'c_referred_by',
-            'd' => 'd_referred_by'
+            'd' => 'd_referred_by',
+            'e' => 'e_referred_by'
         ];
         
         $column = $columnMap[$level] ?? null;

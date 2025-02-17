@@ -17,6 +17,7 @@
 <?php endif; ?>
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/themify-icons/0.1.2/css/themify-icons.css">
 
 <div class="navbar-wrapper">
     <div class="m-header main-logo">
@@ -38,31 +39,70 @@
             
                 <li class="dash-item">
                     <a href="<?php echo e(route('level_1.index')); ?>" class="dash-link">
-                        <span class="dash-micon"><i class="ti ti-users"></i></span>
+                        <span class="dash-micon"><i class="ti ti-users"></i></span> <!-- User icon for level 1 -->
                         <span class="dash-mtext"><?php echo e(__('Level 1')); ?></span>
                     </a>
                 </li>
 
                 <li class="dash-item">
                     <a href="<?php echo e(route('level_2.index')); ?>" class="dash-link">
-                        <span class="dash-micon"><i class="ti ti-users"></i></span>
+                        <span class="dash-micon"><i class="ti ti-users"></i></span> <!-- User icon for level 2 -->
                         <span class="dash-mtext"><?php echo e(__('Level 2')); ?></span>
                     </a>
                 </li>
 
                 <li class="dash-item">
                     <a href="<?php echo e(route('level_3.index')); ?>" class="dash-link">
-                        <span class="dash-micon"><i class="ti ti-users"></i></span>
+                        <span class="dash-micon"><i class="ti ti-users"></i></span> <!-- User icon for level 3 -->
                         <span class="dash-mtext"><?php echo e(__('Level 3')); ?></span>
                     </a>
                 </li>
 
                 <li class="dash-item">
+                    <a href="<?php echo e(route('level_4.index')); ?>" class="dash-link">
+                        <span class="dash-micon"><i class="ti ti-users"></i></span> <!-- User icon for level 3 -->
+                        <span class="dash-mtext"><?php echo e(__('Level 4')); ?></span>
+                    </a>
+                </li>
+
+                <li class="dash-item">
                     <a href="<?php echo e(route('works.index')); ?>" class="dash-link">
-                        <span class="dash-micon"><i class="ti ti-users"></i></span>
+                        <span class="dash-micon"><i class="ti ti-briefcase"></i></span> <!-- Briefcase icon for works -->
                         <span class="dash-mtext"><?php echo e(__('Works')); ?></span>
                     </a>
                 </li>
+
+                <li class="dash-item">
+                    <a href="<?php echo e(route('inactive_users.index')); ?>" class="dash-link">
+                        <span class="dash-micon"><i class="ti ti-users"></i></span> <!-- User-slash icon for inactive users -->
+                        <span class="dash-mtext"><?php echo e(__('My Inactive Users')); ?></span>
+                    </a>
+                </li>
+
+                <li class="dash-item">
+                    <a href="<?php echo e(route('invite_friends.index')); ?>" class="dash-link">
+                        <span class="dash-micon"><i class="ti ti-user-plus"></i></span> <!-- User-plus icon for invite friends -->
+                        <span class="dash-mtext"><?php echo e(__('Invite Friends')); ?></span>
+                    </a>
+                </li>
+
+                <li class="dash-item">
+                <a href="<?php echo e(route('transactions.index')); ?>" class="dash-link">
+                    <span class="dash-micon">
+                        <i class="ti ti-credit-card"></i> <!-- Icon for transactions -->
+                    </span>
+                    <span class="dash-mtext"><?php echo e(__('Transactions')); ?></span>
+                </a>
+
+                <li class="dash-item">
+                <a href="<?php echo e(route('withdrawals.index')); ?>" class="dash-link">
+                    <span class="dash-micon">
+                        <i class="ti ti-wallet"></i> <!-- Icon for withdrawals -->
+                    </span>
+                    <span class="dash-mtext"><?php echo e(__('Withdrawals')); ?></span>
+                </a>
+                </li>
+
 
           
             <!--dashboard-->
