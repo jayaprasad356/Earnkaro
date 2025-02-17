@@ -82,7 +82,7 @@ class InactiveUsersController extends Controller
     
         // Call the API to fetch the users based on the user_id and level
         try {
-            $response = Http::post('http://localhost/Earnkaro/api/level', [
+            $response = Http::post('https://earnkaro.graymatterworks.com/api/level', [
                 'user_id' => $userId,
                 'level' => $mappedLevel  // Use mapped level
             ]);

@@ -19,7 +19,7 @@ class UsersController extends Controller
         }
 
         // Call the API to get level data
-        $response = Http::post('http://localhost/Earnkaro/api/level', [
+        $response = Http::post('https://earnkaro.graymatterworks.com/api/level', [
             'user_id' => $user_id,
             'level' => 'b'
         ]);
@@ -50,7 +50,7 @@ class UsersController extends Controller
         }
 
         // Call the API to get level data
-        $response = Http::post('http://localhost/Earnkaro/api/level', [
+        $response = Http::post('https://earnkaro.graymatterworks.com/api/level', [
             'user_id' => $user_id,
             'level' => 'c'
         ]);
@@ -81,7 +81,7 @@ class UsersController extends Controller
         }
 
         // Call the API to get level data
-        $response = Http::post('http://localhost/Earnkaro/api/level', [
+        $response = Http::post('https://earnkaro.graymatterworks.com/api/level', [
             'user_id' => $user_id,
             'level' => 'd'
         ]);
@@ -112,7 +112,7 @@ class UsersController extends Controller
         }
 
         // Call the API to get level data
-        $response = Http::post('http://localhost/Earnkaro/api/level', [
+        $response = Http::post('https://earnkaro.graymatterworks.com/api/level', [
             'user_id' => $user_id,
             'level' => 'e'
         ]);
