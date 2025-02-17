@@ -15,6 +15,9 @@
 <?php endif; ?>
 
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <div class="header-wrapper">
     <div class="me-auto dash-mob-drp">
         <ul class="list-unstyled">
@@ -29,28 +32,30 @@
             </li>
 
             <li class="dropdown dash-h-item drp-company">
-                <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
-                    role="button" aria-haspopup="false" aria-expanded="false">
-                    <span class="theme-avtar">
-                        <img alt="#"
-                            src="<?php echo e(asset('storage/uploads/avatar/avatar.png')); ?>"
-                            class="header-avtar" style="width: 100%; border-radius:50%">
-                    </span>
-                    <span class="hide-mob ms-2"><?php echo e(__('Hi Admin')); ?></span>
-                        <i class="ti ti-chevron-down drp-arrow nocolor hide-mob"></i>
-                </a>
-                <div class="dropdown-menu dash-h-dropdown">
-                 
+    <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
+        role="button" aria-haspopup="true" aria-expanded="false">
+        <span class="theme-avtar">
+            <img alt="#" src="<?php echo e(asset('storage/uploads/avatar/avatar.png')); ?>" class="header-avtar"
+                style="width: 100%; border-radius:50%">
+        </span>
+        <span class="hide-mob ms-2"><?php echo e(__('Hi Admin')); ?></span>
+        <i class="ti ti-chevron-down drp-arrow nocolor hide-mob"></i>
+    </a>
 
-                    <a href="<?php echo e(route('logout')); ?>" class="dropdown-item"
-                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                        <i class="ti ti-power"></i>
-                        <span><?php echo e(__('Logout')); ?></span>
-                    </a>
-                    <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display: none;">
-                        <?php echo csrf_field(); ?></form>
-                </div>
-            </li>
+    <div class="dropdown-menu dash-h-dropdown">
+        <a href="<?php echo e(route('logout')); ?>" class="dropdown-item"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <i class="ti ti-power"></i>
+            <span><?php echo e(__('Logout')); ?></span>
+        </a>
+        
+        <!-- Logout Form -->
+        <form id="logout-form" action="<?php echo e(route('logout')); ?>" method="POST" style="display: none;">
+            <?php echo csrf_field(); ?>
+        </form>
+    </div>
+</li>
+
 
 
         </ul>
