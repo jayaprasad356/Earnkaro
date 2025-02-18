@@ -330,7 +330,7 @@ class AuthController extends Controller
     $user->city = $city;
     $user->email = $email;
     $user->state = $state;
-    $user->password = bcrypt($password);
+    $user->password = $password;
     $user->referred_by = $referred_by;
     $user->c_referred_by = $c_referred_by;
     $user->d_referred_by = $d_referred_by;
