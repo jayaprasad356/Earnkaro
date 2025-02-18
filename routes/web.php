@@ -65,7 +65,13 @@ Route::patch('/withdrawals/bulk-cancel', [WithdrawalsController::class, 'bulkCan
 Route::get('withdrawals/export', [WithdrawalsController::class, 'export'])->name('withdrawals.export');
 Route::put('withdrawals/{id}', [WithdrawalsController::class, 'update'])->name('withdrawals.update');
 Route::resource('withdrawals', WithdrawalsController::class);
-
+Route::get('/withdrawals/show', [WithdrawalsController::class, 'show'])->name('withdrawals.show');
+Route::resource('withdrawals', WithdrawalsController::class)->except(['show']);
+Route::post('add-to-main-balance', [WithdrawalsController::class, 'addToMainBalance'])->name('add-to-main-balance');
+Route::post('/withdrawals/submit', [WithdrawalsController::class, 'submitWithdrawal'])->name('withdrawals.submit');
 Route::get('/inactive-users/get-level-users', [InactiveUsersController::class, 'getLevelUsers'])->name('inactive_users.getLevelUsers');
+Route::get('/inactive-users/addusers', [InactiveUsersController::class, 'addusers'])->name('inactive_users.addusers');
+Route::post('/inactive-users/register', [InactiveUsersController::class, 'register'])->name('inactive_users.register');
+
 // Handle Image Upload (POST)
 Route::post('/works/upload', [WorksController::class, 'uploadImage'])->name('works.upload');

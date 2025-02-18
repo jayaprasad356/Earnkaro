@@ -36,34 +36,39 @@
                                 class="ti ti-home"></i></span><span class="dash-mtext"><?php echo e(__('Dashboard')); ?></span></a>
                 </li>
         
-            
                 <li class="dash-item">
-                    <a href="<?php echo e(route('level_1.index')); ?>" class="dash-link">
-                        <span class="dash-micon"><i class="ti ti-users"></i></span> <!-- User icon for level 1 -->
-                        <span class="dash-mtext"><?php echo e(__('Level 1')); ?></span>
-                    </a>
-                </li>
-
-                <li class="dash-item">
-                    <a href="<?php echo e(route('level_2.index')); ?>" class="dash-link">
-                        <span class="dash-micon"><i class="ti ti-users"></i></span> <!-- User icon for level 2 -->
-                        <span class="dash-mtext"><?php echo e(__('Level 2')); ?></span>
-                    </a>
-                </li>
-
-                <li class="dash-item">
-                    <a href="<?php echo e(route('level_3.index')); ?>" class="dash-link">
-                        <span class="dash-micon"><i class="ti ti-users"></i></span> <!-- User icon for level 3 -->
-                        <span class="dash-mtext"><?php echo e(__('Level 3')); ?></span>
-                    </a>
-                </li>
-
-                <li class="dash-item">
-                    <a href="<?php echo e(route('level_4.index')); ?>" class="dash-link">
-                        <span class="dash-micon"><i class="ti ti-users"></i></span> <!-- User icon for level 3 -->
-                        <span class="dash-mtext"><?php echo e(__('Level 4')); ?></span>
-                    </a>
-                </li>
+                <a href="#" class="dash-link" id="levels-toggle">
+                    <span class="dash-micon"><i class="ti ti-building"></i></span>
+                    <span class="dash-mtext"><?php echo e(__('Levels')); ?></span>
+                </a>
+                <ul class="list-unstyled" id="levels-menu" style="display: none;">
+                    <li>
+                        <a href="<?php echo e(route('level_1.index')); ?>" class="dash-link">
+                            <span class="dash-micon"><i class="ti ti-users"></i></span>
+                            <span class="dash-mtext"><?php echo e(__('Level 1')); ?></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo e(route('level_2.index')); ?>" class="dash-link">
+                            <span class="dash-micon"><i class="ti ti-users"></i></span>
+                            <span class="dash-mtext"><?php echo e(__('Level 2')); ?></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo e(route('level_3.index')); ?>" class="dash-link">
+                            <span class="dash-micon"><i class="ti ti-users"></i></span>
+                            <span class="dash-mtext"><?php echo e(__('Level 3')); ?></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo e(route('level_4.index')); ?>" class="dash-link">
+                            <span class="dash-micon"><i class="ti ti-users"></i></span>
+                            <span class="dash-mtext"><?php echo e(__('Level 4')); ?></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+               
 
                 <li class="dash-item">
                     <a href="<?php echo e(route('works.index')); ?>" class="dash-link">
@@ -119,4 +124,10 @@
 </div>
 </div>
 </nav>
-<?php /**PATH C:\xampp\htdocs\Earnkaro\resources\views/partial/Admin/menu.blade.php ENDPATH**/ ?>
+<script>
+document.getElementById('levels-toggle').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default link behavior
+    var submenu = document.getElementById('levels-menu');
+    submenu.style.display = (submenu.style.display === 'none' || submenu.style.display === '') ? 'block' : 'none';
+});
+</script><?php /**PATH C:\xampp\htdocs\Earnkaro\resources\views/partial/Admin/menu.blade.php ENDPATH**/ ?>

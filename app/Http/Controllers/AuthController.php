@@ -100,4 +100,249 @@ class AuthController extends Controller
         ], 200);
     }
     
+
+    public function addToMainBalance(Request $request)
+    {
+        // Check if 'user_id' is empty
+        if (empty($request->input('user_id'))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User Id is Empty',
+            ], 400);
+        }
+
+        // Check if 'wallet_type' is empty
+        if (empty($request->input('wallet_type'))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Wallet Type is Empty',
+            ], 400);
+        }
+
+        // Retrieve data from the request
+        $userId = $request->input('user_id');
+        $walletType = $request->input('wallet_type');
+        $datetime = now();
+
+        // Escape strings (optional, depending on your DB library usage)
+        $userId = intval($userId); // cast to integer
+        $walletType = $walletType; // Directly use walletType, it's a string
+
+        // Retrieve user data
+        $user = Users::find($userId);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User Not Found',
+            ], 404);
+        }
+
+        // Check wallet balances
+        $earningWallet = $user->earning_wallet;
+        $bonusWallet = $user->bonus_wallet;
+
+        // If wallet_type is earning_wallet
+        if ($walletType == 'earning_wallet') {
+            if ($earningWallet < 10) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Minimum 10 rs to add',
+                ], 400);
+            }
+
+            // Start transaction
+            DB::beginTransaction();
+
+            try {
+                // Record the transaction
+                Transactions::create([
+                    'user_id' => $userId,
+                    'type' => 'earning_wallet',
+                    'datetime' => $datetime,
+                    'amount' => $earningWallet,
+                ]);
+
+                // Update user balances
+                $user->update([
+                    'earning_wallet' => $user->earning_wallet - $earningWallet,
+                    'balance' => $user->balance + $earningWallet,
+                ]);
+
+                // Commit the transaction
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred while processing the request',
+                ], 500);
+            }
+        }
+
+        // If wallet_type is bonus_wallet
+        if ($walletType == 'bonus_wallet') {
+            if ($bonusWallet < 50) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Minimum 50 rs to add',
+                ], 400);
+            }
+
+            // Start transaction
+            DB::beginTransaction();
+
+            try {
+                // Record the transaction
+                Transactions::create([
+                    'user_id' => $userId,
+                    'type' => 'bonus_wallet',
+                    'datetime' => $datetime,
+                    'amount' => $bonusWallet,
+                ]);
+
+                // Update user balances
+                $user->update([
+                    'bonus_wallet' => $user->bonus_wallet - $bonusWallet,
+                    'balance' => $user->balance + $bonusWallet,
+                ]);
+
+                // Commit the transaction
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'An error occurred while processing the request',
+                ], 500);
+            }
+        }
+
+        // Retrieve settings for minimum withdrawal
+        $minWithdrawal = DB::table('settings')->where('id', 1)->value('min_withdrawal');
+
+        // Return success response with the updated user data
+        return response()->json([
+            'success' => true,
+            'message' => 'Added to Main Balance Successfully',
+            'data' => [
+                'user' => $user,
+                'min_withdrawal' => $minWithdrawal,
+            ],
+        ]);
+    }
+
+
+    public function register(Request $request)
+   {
+    // Check if all required parameters are provided
+    $name = $request->input('name');
+    $mobile = $request->input('mobile');
+    $age = $request->input('age');
+    $city = $request->input('city');
+    $email = $request->input('email');
+    $state = $request->input('state');
+    $password = $request->input('password');
+    $referred_by = $request->input('referred_by');
+
+    if (empty($name)) {
+        return response()->json(['success' => false, 'message' => "Name is Empty"]);
+    }
+    if (empty($mobile)) {
+        return response()->json(['success' => false, 'message' => "Mobile number is Empty"]);
+    }
+
+    // Clean mobile number
+    $mobileNumber = preg_replace('/[^0-9]/', '', $mobile);
+
+    if (substr($mobileNumber, 0, 1) === '0') {
+        return response()->json(['success' => false, 'message' => "Mobile number cannot start with '0'"]);
+    }
+
+    if (strlen($mobileNumber) !== 10) {
+        return response()->json(['success' => false, 'message' => "Mobile number should be exactly 10 digits"]);
+    }
+
+    if (empty($age)) {
+        return response()->json(['success' => false, 'message' => "Age is Empty"]);
+    }
+    if (empty($city)) {
+        return response()->json(['success' => false, 'message' => "City is Empty"]);
+    }
+    if (empty($email)) {
+        return response()->json(['success' => false, 'message' => "Email is Empty"]);
+    }
+    if (empty($state)) {
+        return response()->json(['success' => false, 'message' => "State is Empty"]);
+    }
+    if (empty($password)) {
+        return response()->json(['success' => false, 'message' => "Password is Empty"]);
+    }
+    if (empty($referred_by)) {
+        return response()->json(['success' => false, 'message' => "Referred By is Empty"]);
+    }
+
+     // Check if referred_by is valid
+     if ($referred_by !== '5PL') {
+        $referrer = Users::where('refer_code', $referred_by)->first();
+        if (!$referrer) { return response()->json(['success' => false, 'message' => "Invalid Referred By"]); }
+    }
+
+    // Check if mobile is already registered
+    $existingUser = Users::where('mobile', $mobile)->first();
+    if ($existingUser) { return response()->json(['success' => false, 'message' => "Mobile Number Already Registered"]); }
+
+    // Handling referred_by logic for deeper referrals (4 levels)
+    $c_referred_by = '';
+    $d_referred_by = '';
+    $e_referred_by = '';
+
+     // If the referred_by is not '5PL' (which means there's a valid refer_code)
+     if ($referred_by !== '5PL') {
+        // Step 1: Find ref1 (First level, c_referred_by)
+        $ref1 = Users::where('refer_code', $referred_by)->first();
+        if ($ref1) {
+            $c_referred_by = $ref1->referred_by;
+
+            // Step 2: Find ref2 (Second level, d_referred_by)
+            if ($c_referred_by) {
+                $ref2 = Users::where('refer_code', $c_referred_by)->first();
+                if ($ref2) {
+                    $d_referred_by = $ref2->referred_by;
+                    
+                    // Step 3: Find ref3 (Third level, e_referred_by)
+                    if ($d_referred_by) {
+                        $ref3 = Users::where('refer_code', $d_referred_by)->first();
+                        if ($ref3) {
+                            $e_referred_by = $ref3->referred_by;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Insert user data
+    $user = new Users();
+    $user->name = $name;
+    $user->mobile = $mobile;
+    $user->age = $age;
+    $user->city = $city;
+    $user->email = $email;
+    $user->state = $state;
+    $user->password = bcrypt($password);
+    $user->referred_by = $referred_by;
+    $user->c_referred_by = $c_referred_by;
+    $user->d_referred_by = $d_referred_by;
+    $user->e_referred_by = $e_referred_by; // Added e_referred_by
+    $user->registered_datetime = Carbon::now();
+    $user->save();
+
+    // Generate refer code
+    $refer_code = 'PL' . str_pad($user->id, 2, '0', STR_PAD_LEFT);
+    $user->refer_code = $refer_code;
+    $user->save();
+
+    return $user;
+}
 }

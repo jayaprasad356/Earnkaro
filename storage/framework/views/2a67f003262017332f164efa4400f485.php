@@ -15,15 +15,13 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                <?php if(session('success')): ?>
-                    <div class="alert alert-success"><?php echo e(session('success')); ?></div>
-                <?php elseif(session('error')): ?>
-                    <div class="alert alert-danger"><?php echo e(session('error')); ?></div>
-                <?php endif; ?>
                 <div class="recharge-balance" style="position: absolute; top: 10px; right: 10px; font-size: 16px; background-color: #f1f1f1; padding: 5px 10px; border-radius: 5px;">
                     <strong><?php echo e(__('Available Recharge Balance: Rs')); ?> <?php echo e($balance); ?></strong>
                 </div>
                 <br><br>
+                <div class="text-end">
+                    <a href="<?php echo e(route('inactive_users.addusers')); ?>" class="btn btn-primary"><?php echo e(__('New User')); ?></a>
+                </div>
                 <div class="table-responsive">
                     <table class="table" id="pc-dt-simple">
                         <thead>

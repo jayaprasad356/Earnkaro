@@ -9,165 +9,341 @@ use Illuminate\Http\Request;
 use App\Exports\WithdrawalsExport; 
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WithdrawalsController extends Controller
 {
     public function index(Request $request)
     {
-        // Get the filters from the query string
-        $status = $request->get('status'); // Default to Pending
-        // $transferType = $request->get('transfer_type'); // No default
+        // Retrieve the user_id from session
+        $user_id = session()->get('user_id');
+    
+        if (!$user_id) {
+            return redirect()->route('dashboard')->with('error', 'Unauthorized access.');
+        }
+    
+        // Get filters from the request
+        $status = $request->get('status');
         $filterDate = $request->get('filter_date');
-
-        // Query to fetch withdrawals based on the filters
+    
+        // Query withdrawals for the specific user
         $withdrawals = Withdrawals::with('users')
+            ->where('user_id', $user_id) // Filter by session user ID
             ->when($status !== null, function ($query) use ($status) {
                 return $query->where('status', $status);
             })
-            // ->when($transferType, function ($query) use ($transferType) {
-            //     return $query->where('type', $transferType); // Assuming 'type' is the column for transfer type
-            // })
             ->when($filterDate, function ($query) use ($filterDate) {
-                return $query->whereDate('datetime', $filterDate); // Filter withdrawals by selected date
+                return $query->whereDate('datetime', $filterDate);
             })
-            ->when($request->get('search'), function ($query, $search) {
-                $query->where('transaction_id', 'like', '%' . $search . '%')
-                      ->orWhereHas('users', function ($query) use ($search) {
-                          $query->where('name', 'like', '%' . $search . '%')
-                                ->orWhere('mobile', 'like', '%' . $search . '%');
-                      });
-            })
-            ->orderBy('datetime', 'desc') // Order by latest data
+            ->orderBy('datetime', 'desc')
             ->get();
-
-        // Return the view with the filtered withdrawals
+    
+        // Return view with filtered withdrawals
         return view('withdrawals.index', compact('withdrawals'));
     }
-
-    public function edit($id)
+    public function show()
     {
-        // Fetch withdrawal and associated user
-        $withdrawal = Withdrawals::with('users')->findOrFail($id);
-        $user = $withdrawal->users; // Get the associated user
-    
-        // Pass both withdrawal and user to the view
-        return view('withdrawals.edit', compact('withdrawal', 'user'));
+        $user_id = session()->get('user_id');
+        
+        if (!$user_id) {
+            return redirect()->route('dashboard')->with('error', 'Unauthorized access.');
+        }
+        
+        // Fetch the user from the database
+        $user = Users::find($user_id);
+        // Get the bank details from the user record
+        $earningWallet = $user->earning_wallet ?? 0;
+        $bonusWallet = $user->bonus_wallet ?? 0;
+        $balance = $user->balance ?? 0;
+        $bank = $user->bank ?? ''; // Fetching bank details
+        $branch = $user->branch ?? '';
+        $ifsc = $user->ifsc ?? '';
+        $account_num = $user->account_num ?? '';
+        $holder_name = $user->holder_name ?? '';
+        
+        // Pass data to the view
+        return view('withdrawals.show', compact('earningWallet', 'bonusWallet', 'balance', 'bank', 'branch', 'ifsc', 'account_num', 'holder_name'));
     }
     
-    public function update(Request $request, $id)
+   
+    public function addToMainBalance(Request $request)
     {
-        $request->validate([
-            'bank' => 'required|string|max:255',
-            'branch' => 'required|string|max:255',
-            'ifsc' => 'required|string|max:20',
-            'account_num' => 'required|string|max:30',
-            'holder_name' => 'required|string|max:255',
-        ]);
+        // Check if user_id exists in session
+        $user_id = session()->get('user_id');
+        
+        if (!$user_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access.',
+            ], 403); // Unauthorized access
+        }
     
-        $withdrawal = Withdrawals::findOrFail($id);
-        $user = Users::findOrFail($withdrawal->user_id);
+        // Get wallet type and amount from request
+        $walletType = $request->input('wallet_type');
+        $datetime = now();
     
-        // Update user's bank details
-        $user->update([
-            'bank' => $request->bank,
-            'branch' => $request->branch,
-            'ifsc' => $request->ifsc,
-            'account_num' => $request->account_num,
-            'holder_name' => $request->holder_name,
-        ]);
+        // Retrieve user data
+        $user = Users::find($user_id);
     
-        // Redirect with success message
-        return redirect()->route('withdrawals.index')->with('success', 'Bank details updated successfully.');
-    }
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found.',
+            ], 404); // User not found
+        }
     
-    
-    public function bulkUpdateStatus(Request $request)
-    {
-        // Validate the request to ensure withdrawal IDs and status are provided
-        $request->validate([
-            'withdrawal_ids' => 'required|array',
-            'withdrawal_ids.*' => 'exists:withdrawals,id',
-            'new_status' => 'required|integer|in:1,2', // Only allow 1 (Paid) or 2 (Cancelled)
-        ]);
-
-        $status = (int) $request->new_status;
-        $successMessage = '';
-        $errorMessage = '';
-
-        // Use a database transaction to ensure atomic updates
-        DB::transaction(function () use ($request, $status, &$successMessage, &$errorMessage) {
-            foreach ($request->withdrawal_ids as $withdrawalId) {
-                $withdrawal = Withdrawals::find($withdrawalId);
-
-                if ($withdrawal) {
-                    // Check if the withdrawal is already cancelled (status 2)
-                    if ($withdrawal->status == 2) {
-                        // If the withdrawal is already cancelled, and trying to cancel again
-                        if ($status === 2) {
-                            $errorMessage = "The withdrawal with ID {$withdrawalId} is already cancelled. It cannot be cancelled again.";
-                            continue; // Skip processing this withdrawal
-                        }
-
-                        // If the withdrawal is already cancelled, and trying to mark as paid
-                        if ($status === 1) {
-                            $errorMessage = "The withdrawal with ID {$withdrawalId} is already cancelled. It cannot be paid again.";
-                            continue; // Skip processing this withdrawal
-                        }
-                    }
-
-                    // Handle the case where the status is set to Cancelled (2)
-                    if ($status === 2) {
-                        $user = Users::find($withdrawal->user_id);
-
-                        if ($user) {
-                            // Refund the amount to the user's balance only if it is not already canceled
-                            $user->increment('balance', $withdrawal->amount);
-
-                            // Log the cancellation in the transactions table
-                            Transactions::create([
-                                'user_id' => $user->id,
-                                'type' => 'cancelled',
-                                'coins' => 0,
-                                'amount' => $withdrawal->amount ?? 0,
-                                'datetime' => now(),
-                            ]);
-                        }
-
-                        // Update the withdrawal status to Cancelled
-                        $withdrawal->update(['status' => 2]);
-                        $successMessage = "The withdrawal with ID {$withdrawalId} has been successfully cancelled.";
-                    }
-
-                    // Handle the case where the status is set to Paid (1)
-                    if ($status === 1) {
-                        // Update the withdrawal status to Paid
-                        $withdrawal->update(['status' => 1]);
-                        $successMessage = "The withdrawal with ID {$withdrawalId} has been successfully marked as paid.";
-                    }
-                }
+        
+        // Based on wallet type, perform the corresponding action
+        if ($walletType == 'earning_wallet') {
+            // Fetch the current earning wallet balance
+            $earningWalletBalance = $user->earning_wallet;
+       
+            if ($walletType == 'earning_wallet' && $earningWalletBalance < 10) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Minimum 10 rs to add from Earning Wallet.",
+                ], 400); // Minimum amount check for earning wallet
             }
-        });
+        
+            if ($earningWalletBalance) {
+                // Proceed to update the earning wallet and main balance
+                DB::beginTransaction();
+                try {
+                    // Record the transaction
+                    Transactions::create([
+                        'user_id' => $user_id,
+                        'type' => 'earning_wallet',
+                        'datetime' => $datetime,
+                        'amount' => $earningWalletBalance,
+                    ]);
+    
+                    // Update user balances
+                    $user->earning_wallet -= $earningWalletBalance;
+                    $user->balance += $earningWalletBalance;
+                    $user->save();
+    
+                    DB::commit();
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Amount successfully added to main balance from Earning Wallet.',
+                    ]);
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'An error occurred. Please try again.',
+                    ], 500);
+                }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Insufficient balance in Earning Wallet.',
+                ], 400); // Insufficient funds in earning wallet
+            }
+        } elseif ($walletType == 'bonus_wallet') {
+            // Fetch the current bonus wallet balance
+            $bonusWalletBalance = $user->bonus_wallet;
+    
+            if ($walletType == 'bonus_wallet' && $bonusWalletBalance < 50) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Minimum 50 rs to add from Bonus Wallet.",
+                ], 400); // Minimum amount check for bonus wallet
+            }
 
-        // Return the response with the appropriate success or error message
-        if ($errorMessage) {
-            return redirect()->route('withdrawals.index')->with('error', $errorMessage);
+            if ($bonusWalletBalance) {
+                // Proceed to update the bonus wallet and main balance
+                DB::beginTransaction();
+                try {
+                    // Record the transaction
+                    Transactions::create([
+                        'user_id' => $user_id,
+                        'type' => 'bonus_wallet',
+                        'datetime' => $datetime,
+                        'amount' => $bonusWalletBalance,
+                    ]);
+    
+                    // Update user balances
+                    $user->bonus_wallet -= $bonusWalletBalance;
+                    $user->balance += $bonusWalletBalance;
+                    $user->save();
+    
+                    DB::commit();
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Amount successfully added to main balance from Bonus Wallet.',
+                    ]);
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'An error occurred. Please try again.',
+                    ], 500);
+                }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Insufficient balance in Bonus Wallet.',
+                ], 400); // Insufficient funds in bonus wallet
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid wallet type.',
+            ], 400); // Invalid wallet type
         }
-
-        if ($successMessage) {
-            return redirect()->route('withdrawals.index')->with('success', $successMessage);
-        }
-
-        return redirect()->route('withdrawals.index')->with('info', 'No withdrawals were updated.');
     }
+    public function submitWithdrawal(Request $request)
+    {
+        // Check if user is logged in
+        $user_id = session()->get('user_id');
+        
+        if (!$user_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access.',
+            ], 403); // Unauthorized access
+        }
+    
+        // Check if current time is between 10:00 AM and 6:00 PM
+        if (!$this->isBetween10AMand6PM()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Withdrawal time is between 10:00 AM and 6:00 PM.',
+            ], 400); // Time restriction
+        }
+    
+        // Check if today is a weekend (Sunday or Saturday)
+        $dayOfWeek = date('w'); // 0 = Sunday, 6 = Saturday
+        if ($dayOfWeek == 0 || $dayOfWeek == 7) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Withdrawals are allowed only from Monday to Saturday.',
+            ], 400); // Day restriction
+        }
+    
+        // Get the withdrawal details from the request
+        $amount = $request->input('amount');
+        $holderName = $request->input('holder_name');
+        $accountNumber = $request->input('account_number');
+        $bank = $request->input('bank');
+        $branch = $request->input('branch');
+        $ifsc = $request->input('ifsc');
+    
+        // Retrieve user details
+        $user = Users::find($user_id);
+        
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found.',
+            ], 404); // User not found
+        }
+    
+        // Check if withdrawal is disabled for this user
+        if ($user->withdrawal_status == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Withdrawals are disabled for your account.',
+            ], 400); // Withdrawal disabled
+        }
+    
+        // Check for pending withdrawals
+        $pendingWithdrawals = Withdrawals::where('user_id', $user_id)
+                                         ->where('status', 0) // status = 0 indicates pending
+                                         ->get();
+        
+        if ($pendingWithdrawals->isNotEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please withdraw again after your pending withdrawal is paid.',
+            ], 400); // Pending withdrawal exists
+        }
+    
+        // Retrieve system settings (min_withdrawal and withdrawal_status)
+        $settings = DB::table('settings')->where('id', 1)->first();
+        
+        if (!$settings || $settings->withdrawal_status == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Withdrawal functionality is currently disabled.',
+            ], 400); // Withdrawal disabled in settings
+        }
+    
+        // Validate minimum withdrawal amount
+        $min_withdrawal = $settings->min_withdrawal;
+        if ($amount < $min_withdrawal) {
+            return response()->json([
+                'success' => false,
+                'message' => "Minimum withdrawal amount is $min_withdrawal.",
+            ], 400); // Withdrawal amount is less than the minimum required
+        }
+    
+        // Validate amount
+        if ($amount <= 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid withdrawal amount.',
+            ], 400);
+        }
+    
+        // Check if user has enough balance
+        if ($user->balance < $amount) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Insufficient balance.',
+            ], 400); // Insufficient balance
+        }
+    
+        // Proceed with withdrawal
+        DB::beginTransaction();
+        try {
+            // Create a withdrawal record
+            Withdrawals::create([
+                'user_id' => $user_id,
+                'amount' => $amount,
+                'status' => 0, // Set status as 'pending'
+                'datetime' => now(),
+              
+            ]);
+    
+            // Update user's balance
+            $user->balance -= $amount;
+            $user->save();
+    
+            // Update or Insert Bank Details into the users table
+            $user->update([
+                'holder_name' => $holderName,
+                'account_number' => $accountNumber,
+                'bank' => $bank,
+                'branch' => $branch,
+                'ifsc' => $ifsc,
+            ]);
+    
+            DB::commit();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Withdrawal request successfully submitted.',
+            ]);
+    
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred. Please try again.',
+            ], 500);
+        }
+    }
+    
+    // Helper function to check if current time is between 10:00 AM and 6:00 PM
+    private function isBetween10AMand6PM() {
+        $currentHour = date('H');
+        $startTimestamp = strtotime('10:00:00');
+        $endTimestamp = strtotime('18:00:00');
+        return ($currentHour >= date('H', $startTimestamp)) && ($currentHour < date('H', $endTimestamp));
+    }
+    
 
-  
-    public function export(Request $request)
-{
-    // Get the status from the request if provided
-    $filters = $request->only('status', 'filter_date');
-
-    return Excel::download(new WithdrawalsExport($filters), 'withdrawals.xlsx');
-}
-
-  
+    
 }

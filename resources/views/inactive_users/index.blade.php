@@ -14,15 +14,13 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @elseif(session('error'))
-                    <div class="alert alert-danger">{{ session('error') }}</div>
-                @endif
                 <div class="recharge-balance" style="position: absolute; top: 10px; right: 10px; font-size: 16px; background-color: #f1f1f1; padding: 5px 10px; border-radius: 5px;">
                     <strong>{{ __('Available Recharge Balance: Rs') }} {{ $balance }}</strong>
                 </div>
                 <br><br>
+                <div class="text-end">
+                    <a href="{{ route('inactive_users.addusers') }}" class="btn btn-primary">{{ __('New User') }}</a>
+                </div>
                 <div class="table-responsive">
                     <table class="table" id="pc-dt-simple">
                         <thead>

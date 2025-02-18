@@ -33,46 +33,20 @@
                         </div>
 
                         <div class="col-md-3 offset-md-3 d-flex justify-content-end">
-                            <a href="{{ route('withdrawals.export', ['status' => request()->get('status', 0), 'filter_date' => request()->get('filter_date')]) }}" class="btn btn-primary">
-                                {{ __('Export Withdrawals') }}
+                        <a href="{{ route('withdrawals.show') }}" class="btn btn-primary">
+                                {{ __('Withdrawal Request') }}
                             </a>
                         </div>
 
                     </div>
                 </form>
 
-                <form action="{{ route('withdrawals.bulkUpdateStatus') }}" method="POST">
-                    @csrf
-                    @method('PATCH')
-
-                    <div class="mb-3 d-flex align-items-center">
-                        <!-- Select All Checkbox -->
-                        <div class="mr-3">
-                            <input type="checkbox" id="select-all">
-                            <label for="select-all">{{ __('Select All') }}</label>
-                        </div>
-
-
-                        <!-- Paid Button -->
-                        <button type="submit" name="new_status" value="1" class="btn btn-success ml-3"
-                            onclick="return confirm('{{ __('Are you sure you want to mark selected as Paid?') }}')">
-                            {{ __('Paid') }}
-                        </button>
-
-                        <!-- Cancel Button -->
-                        <button type="submit" name="new_status" value="2" class="btn btn-danger ml-2"
-                            onclick="return confirm('{{ __('Are you sure you want to cancel selected withdrawals?') }}')">
-                            {{ __('Cancel') }}
-                        </button>
-                    </div>
 
                 <div class="card-body table-border-style">
                     <div class="table-responsive">
                         <table class="table" id="pc-dt-simple">
                             <thead>
                                 <tr>
-                                    <th>{{ __('Select') }}</th>
-                                    <th>{{ __('Actions') }}</th> 
                                     <th>{{ __('ID') }}</th>
                                     <th>{{ __('Name') }}</th>
                                     <th>{{ __('Mobile') }}</th>
@@ -90,15 +64,6 @@
                             <tbody>
                                 @foreach ($withdrawals as $withdrawal)
                                     <tr>
-                                        <td>
-                                            <input type="checkbox" name="withdrawal_ids[]" value="{{ $withdrawal->id }}">
-                                        </td>
-                                        <td>
-                                            <a href="#" data-url="{{ route('withdrawals.edit', $withdrawal->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Bank Details') }}"
-                                               class="btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{ __('Edit') }}">
-                                                <i class="ti ti-pencil text-black"></i>
-                                            </a>
-                                        </td>
                                         <td>{{ $withdrawal->id }}</td>
                                         <td>{{ ucfirst($withdrawal->users->name ?? '') }}</td>
                                         <td>{{ $withdrawal->users->mobile ?? '' }}</td>
@@ -128,31 +93,3 @@
                     </div>
                 </div>
 @endsection
-
-@section('js')
-        <script src="{{ asset('plugins/sweetalert2/sweetalert2.min.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
-        <script>
-         $(document).ready(function () {
-    // Handle "Select All" checkbox
-    $('#select-all').change(function() {
-        // Get the state of the "Select All" checkbox
-        var isChecked = $(this).prop('checked');
-
-        // Select or deselect all individual checkboxes
-        $('input[name="withdrawal_ids[]"]').prop('checked', isChecked);
-    });
-
-    // Handle individual checkboxes
-    $('input[name="withdrawal_ids[]"]').change(function() {
-        // If any individual checkbox is unchecked, uncheck the "Select All" checkbox
-        if ($('input[name="withdrawal_ids[]"]:not(:checked)').length > 0) {
-            $('#select-all').prop('checked', false); // Uncheck "Select All" checkbox
-        } else {
-            $('#select-all').prop('checked', true); // Check "Select All" checkbox if all are selected
-        }
-    });
-});
-
-        </script>
-    @endsection
