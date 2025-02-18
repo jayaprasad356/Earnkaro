@@ -15,39 +15,6 @@
 <div class="container">
     <!-- Wrapper with background box -->
     <div class="bg-light p-4 rounded shadow-sm">
-        <div class="row justify-content-start">
-            <!-- Earning Wallet -->
-            <div class="col-md-4">
-                <div class="card text-center border-success">
-                    <div class="card-body">
-                        <h4 class="card-title">{{ __('Earning Wallet') }}</h4>
-                        <p class="wallet-amount">
-                            <i class="fas fa-wallet"></i> {{ number_format($earningWallet, 2) }}
-                        </p>
-                        <button class="btn btn-success" id="addEarningWallet" data-wallet="earning_wallet">{{ __('Add to Main Balance') }}</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bonus Wallet -->
-            <div class="col-md-4">
-                <div class="card text-center border-primary">
-                    <div class="card-body">
-                        <h4 class="card-title">{{ __('Bonus Wallet') }}</h4>
-                        <p class="wallet-amount">
-                            <i class="fas fa-wallet"></i> {{ number_format($bonusWallet, 2) }}
-                        </p>
-                        <button class="btn btn-primary" id="addBonusWallet" data-wallet="bonus_wallet">{{ __('Add to Main Balance') }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Withdrawal Time Notice -->
-        <div class="text-start mt-3">
-            <p class="text-muted fw-bold fs-8">{{ __('Withdrawal Request Timing Between 10am to 6pm') }}</p>
-        </div>
-
         <div class="text-start mt-4">
             <p class="text fw-bold fs-4">{{ __('Withdrawal Request ') }}</p>
         </div>
@@ -66,10 +33,12 @@
             <!-- Enter Amount -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="amount" class="form-label">{{ __('Enter Amount') }}</label>
-                    <input type="number" class="form-control" id="amount" name="amount" required>
+                    <label for="amount" class="form-label text-primary fw-bold">{{ __('Enter Amount') }}</label>
+                    <input type="number" class="form-control border-2 border-warning bg-light shadow-lg text-dark fw-bold" 
+                        id="amount" name="amount" required placeholder="Enter amount">
                 </div>
             </div>
+
 
             <!-- Holder Name -->
             <div class="col-md-6">
@@ -117,6 +86,9 @@
             <button type="button" id="submitWithdrawalRequest" class="btn btn-success">{{ __('Submit Withdrawal Request') }}</button>
         </div>
 
+        <div class="text-start mt-3">
+            <p class="text-muted fw-bold fs-8">{{ __('Withdrawal Request Timing Between 10am to 6pm') }}</p>
+        </div>
     </div>
 </div>
 

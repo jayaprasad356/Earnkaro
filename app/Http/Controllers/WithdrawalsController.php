@@ -66,133 +66,6 @@ class WithdrawalsController extends Controller
     }
     
    
-    public function addToMainBalance(Request $request)
-    {
-        // Check if user_id exists in session
-        $user_id = session()->get('user_id');
-        
-        if (!$user_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized access.',
-            ], 403); // Unauthorized access
-        }
-    
-        // Get wallet type and amount from request
-        $walletType = $request->input('wallet_type');
-        $datetime = now();
-    
-        // Retrieve user data
-        $user = Users::find($user_id);
-    
-        if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User not found.',
-            ], 404); // User not found
-        }
-    
-        
-        // Based on wallet type, perform the corresponding action
-        if ($walletType == 'earning_wallet') {
-            // Fetch the current earning wallet balance
-            $earningWalletBalance = $user->earning_wallet;
-       
-            if ($walletType == 'earning_wallet' && $earningWalletBalance < 10) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Minimum 10 rs to add from Earning Wallet.",
-                ], 400); // Minimum amount check for earning wallet
-            }
-        
-            if ($earningWalletBalance) {
-                // Proceed to update the earning wallet and main balance
-                DB::beginTransaction();
-                try {
-                    // Record the transaction
-                    Transactions::create([
-                        'user_id' => $user_id,
-                        'type' => 'earning_wallet',
-                        'datetime' => $datetime,
-                        'amount' => $earningWalletBalance,
-                    ]);
-    
-                    // Update user balances
-                    $user->earning_wallet -= $earningWalletBalance;
-                    $user->balance += $earningWalletBalance;
-                    $user->save();
-    
-                    DB::commit();
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Amount successfully added to main balance from Earning Wallet.',
-                    ]);
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'An error occurred. Please try again.',
-                    ], 500);
-                }
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Insufficient balance in Earning Wallet.',
-                ], 400); // Insufficient funds in earning wallet
-            }
-        } elseif ($walletType == 'bonus_wallet') {
-            // Fetch the current bonus wallet balance
-            $bonusWalletBalance = $user->bonus_wallet;
-    
-            if ($walletType == 'bonus_wallet' && $bonusWalletBalance < 50) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Minimum 50 rs to add from Bonus Wallet.",
-                ], 400); // Minimum amount check for bonus wallet
-            }
-
-            if ($bonusWalletBalance) {
-                // Proceed to update the bonus wallet and main balance
-                DB::beginTransaction();
-                try {
-                    // Record the transaction
-                    Transactions::create([
-                        'user_id' => $user_id,
-                        'type' => 'bonus_wallet',
-                        'datetime' => $datetime,
-                        'amount' => $bonusWalletBalance,
-                    ]);
-    
-                    // Update user balances
-                    $user->bonus_wallet -= $bonusWalletBalance;
-                    $user->balance += $bonusWalletBalance;
-                    $user->save();
-    
-                    DB::commit();
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Amount successfully added to main balance from Bonus Wallet.',
-                    ]);
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'An error occurred. Please try again.',
-                    ], 500);
-                }
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Insufficient balance in Bonus Wallet.',
-                ], 400); // Insufficient funds in bonus wallet
-            }
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid wallet type.',
-            ], 400); // Invalid wallet type
-        }
-    }
     public function submitWithdrawal(Request $request)
     {
         // Check if user is logged in
@@ -260,25 +133,21 @@ class WithdrawalsController extends Controller
             ], 400); // Pending withdrawal exists
         }
     
-        // Retrieve system settings (min_withdrawal and withdrawal_status)
-        $settings = DB::table('settings')->where('id', 1)->first();
-        
-        if (!$settings || $settings->withdrawal_status == 0) {
+     
+    // Retrieve withdrawal settings from the "news" table instead of "settings"
+        $news = DB::table('news')->where('id', 1)->first(); 
+
+        if (!$news || $news->withdrawal_status == 0) {
             return response()->json([
                 'success' => false,
                 'message' => 'Withdrawal functionality is currently disabled.',
             ], 400); // Withdrawal disabled in settings
         }
-    
-        // Validate minimum withdrawal amount
-        $min_withdrawal = $settings->min_withdrawal;
-        if ($amount < $min_withdrawal) {
-            return response()->json([
-                'success' => false,
-                'message' => "Minimum withdrawal amount is $min_withdrawal.",
-            ], 400); // Withdrawal amount is less than the minimum required
-        }
-    
+
+        // Use the min_withdrawal from the "news" table
+        $minimum_withdrawal = $news->minimum_withdrawal;
+
+
         // Validate amount
         if ($amount <= 0) {
             return response()->json([

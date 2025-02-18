@@ -31,18 +31,19 @@
                                         </div>
                                         <div class="ms-2">
                                             <small class="text-muted">{{ __('Monthly') }}</small>
-                                            <h6 class="m-0">{{ __('Salery') }}</h6>
+                                            <h6 class="m-0">{{ __('Salary') }}</h6>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-auto text-end">
-                                    <h4 class="m-0 text-success">{{ number_format($monthly_salery, 2) }}</h4>
+                                    <h4 class="m-0 text-success">{{ number_format($monthly_salary, 2) }}</h4>
                                 </div>
                             </div>
                             <div class="text-center mt-3">
-                                <a  class="btn btn-success">
+                            <a href="javascript:void(0);" class="btn btn-success" onclick="addToBalance('monthly_salary', {{ $monthly_salary }})">
                                     {{ __('Add to Withdrawals') }}
                                 </a>
+
                             </div>
                         </div>
                     </div>
@@ -69,9 +70,10 @@
                                 </div>
                             </div>
                             <div class="text-center mt-3">
-                                <a class="btn btn-info">
+                            <a href="javascript:void(0);" class="btn btn-info" onclick="addToBalance('level_income', {{ $level_income }})">
                                     {{ __('Add to Withdrawals') }}
                                 </a>
+
                             </div>
                         </div>
                     </div>
@@ -98,9 +100,10 @@
                                 </div>
                             </div>
                             <div class="text-center mt-3">
-                                <a  class="btn btn-warning">
+                            <a href="javascript:void(0);" class="btn btn-info" onclick="addToBalance('refer_income', {{ $refer_income }})">
                                     {{ __('Add to Withdrawals') }}
                                 </a>
+
                             </div>
                         </div>
                     </div>
@@ -127,9 +130,10 @@
                                 </div>
                             </div>
                             <div class="text-center mt-3">
-                                <a class="btn btn-danger">
+                            <a href="javascript:void(0);" class="btn btn-info" onclick="addToBalance('whatsapp_status_income', {{ $whatsapp_status_income }})">
                                     {{ __('Add to Withdrawals') }}
                                 </a>
+
                             </div>
                         </div>
                     </div>
@@ -140,3 +144,27 @@
 
     </div>
 @endsection
+<script>
+function addToBalance(type, amount) {
+    $.ajax({
+        url: "{{ route('balance.add') }}",
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            type: type,
+            amount: amount
+        },
+        success: function(response) {
+            if (response.success) {
+                alert(response.message);
+                location.reload();
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function() {
+            alert("Something went wrong. Try again!");
+        }
+    });
+}
+</script>

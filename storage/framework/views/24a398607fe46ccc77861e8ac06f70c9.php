@@ -44,7 +44,7 @@
                     <?php endif; ?>
 
                     <br>
-                    <button type="button" class="btn btn-success" ><?php echo e(__('Click to Activate')); ?></button>
+                    <button type="button" class="btn btn-success" id="activateUserBtn"><?php echo e(__('Click to Activate')); ?></button>
                 </div>
             </div>
         </div>
@@ -57,9 +57,8 @@
 
 <script>
 $(document).ready(function() {
-    var userId = "<?php echo e($id); ?>"; // Get the user ID from the Blade variable
+    var userId = "<?php echo e(Session::get('user_id')); ?>"; // Get user_id from the session
     var level = "<?php echo e($level); ?>"; // Get the level from the Blade variable
-
     // Hide the dropdown for level 1 and show custom message instead
     if (level == 1) {
         $('#userDropdownContainer').hide(); // Hide the dropdown
@@ -90,19 +89,65 @@ $(document).ready(function() {
                     }
                 },
                 error: function(xhr, status, error) {
-                    alert('Failed to fetch users: ' + error);
+                    alert('No users found for the selected level.');
                 }
             });
         }
     }
-
-    // Call the fetch function when the page loads for level > 1
     if (level > 1) {
         fetchUsersForLevel();
     }
 
-   
 });
+</script>
+<script>
+$(document).ready(function () {
+    $('#activateUserBtn').click(function () {
+        var userId = "<?php echo e(Session::get('user_id')); ?>"; // Get logged-in user ID from session
+        var level = "<?php echo e($level); ?>"; // Get the level from the Blade variable
+        var selectedUserId = $("#userDropdown").val(); // Get the selected user ID from the dropdown
+
+        // Make sure the user selected a user to activate
+        if (!selectedUserId && level > 1) {
+            alert("Please select a user to activate.");
+            return;
+        }
+
+        // For level 1, we don't need to use the dropdown; just pass the ID of the user to activate.
+        if (level == 1) {
+            selectedUserId = userId; // For level 1, we're activating the logged-in user
+        }
+
+        var userName = $("#userDropdown option:selected").data('name') || ''; // Get the name (for level > 1)
+        var userMobile = $("#userDropdown option:selected").data('mobile') || ''; // Get the mobile (for level > 1)
+
+        // Make the GET request to activate the user
+        $.ajax({
+            url: "<?php echo e(route('inactive_users.activateusers')); ?>",
+            type: 'GET',
+            data: {
+                id: selectedUserId,
+                name: userName,
+                mobile: userMobile,
+                level: level
+            },
+            success: function(response) {
+                if (response.success) {
+                    alert('User activated successfully!'); // Show success message
+                    // Optionally, you can reload the page or update the UI
+                    location.reload(); // Reload the page to reflect the changes
+                } else {
+                    alert('Failed to activate user. ' + response.message); // Show error message
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + error); // Handle any AJAX errors
+            }
+        });
+    });
+});
+
+
 </script>
 
 <?php echo $__env->make('layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\Earnkaro\resources\views/inactive_users/activate.blade.php ENDPATH**/ ?>

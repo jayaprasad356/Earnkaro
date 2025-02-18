@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Http;
 use App\Models\Users;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class InactiveUsersController extends Controller
 {
@@ -49,16 +50,69 @@ class InactiveUsersController extends Controller
         return view('inactive_users.activate', compact('user', 'id', 'userName', 'userMobile', 'level', 'balance'));
     }
 
-    public function showActivationPage(Request $request)
+    public function activateusers(Request $request)
     {
-        $level = $request->input('level'); // Level 2, 3, or 4
-        $users = Users::where('status', 0)->limit(10)->get(); // Fetch 10 inactive users
-        $balance = auth()->user()->balance; // Assuming you have a balance attribute in the user model
-        
-        // Return the view with level, users, and balance data
-        return view('inactive_users.activate', compact('level', 'users', 'balance'));
+        $user_id = Session::get('user_id');
+        $user = Users::find($user_id);
+        $balance = $user ? $user->balance : 0;
+    
+        // Get the user details (id, name, mobile, level) from the query parameters
+        $id = $request->query('id');
+        $userName = $request->query('name');
+        $userMobile = $request->query('mobile');
+        $level = $request->query('level');
+    
+        // If level is 1, check if the user has activated 3 users already
+        if ($level == 1) {
+            // Count how many level 1 users have been activated by the current user (user_id)
+            $referralCount = Users::where('referred_by', $user_id)->count();
+    
+            // If there are already 3 referrals for Level 1, don't allow activation
+            if ($referralCount >= 3) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You have already activated 3 users for Level 1.'
+                ]);
+            }
+    
+            // Proceed with the activation if less than 3 users
+            // Activate the selected user (update their status)
+            $selectedUser = Users::find($id);
+            if ($selectedUser) {
+                $selectedUser->status = 1; // Update user status to active
+                $selectedUser->referred_by = $user_id;  // Set the referring user ID
+                $selectedUser->save();
+    
+                // Insert a transaction record for the activation
+                DB::table('transactions')->insert([
+                    'user_id' => $user_id,
+                    'referred_user_id' => $id,
+                    'type' => 'level_1_activate',
+                    'amount' => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+    
+                // Return success response
+                return response()->json([
+                    'success' => true,
+                    'message' => 'User activated successfully for Level 1.'
+                ]);
+            }
+    
+            // If selected user doesn't exist
+            return response()->json([
+                'success' => false,
+                'message' => 'Selected user does not exist.'
+            ]);
+        }
+    
+        // Logic for other levels can go here (if necessary)
     }
     
+
+
+  
     public function getLevelUsers(Request $request)
     {
         $userId = $request->input('user_id');
@@ -82,7 +136,7 @@ class InactiveUsersController extends Controller
     
         // Call the API to fetch the users based on the user_id and level
         try {
-            $response = Http::post('https://earnkaro.graymatterworks.com/api/level', [
+            $response = Http::post('http://localhost/Earnkaro/api/level', [
                 'user_id' => $userId,
                 'level' => $mappedLevel  // Use mapped level
             ]);

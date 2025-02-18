@@ -80,10 +80,11 @@ class AuthController extends Controller
     
         // Fetch referred users
         $users = DB::table('users')
-            ->where($column, $refer_code)
-            ->orderBy('id', 'desc')
-            ->select('*', DB::raw("DATE(registered_datetime) AS registered_date"), DB::raw("CONCAT(SUBSTRING(mobile, 1, 2), '******', SUBSTRING(mobile, LENGTH(mobile)-1, 2)) AS mobile"))
-            ->get();
+        ->where($column, $refer_code)
+        ->orderBy('id', 'desc')
+        ->select('*', DB::raw("DATE(registered_datetime) AS registered_date"))
+        ->get();
+    
     
         if ($users->isEmpty()) {
             return response()->json([
@@ -336,6 +337,7 @@ class AuthController extends Controller
     $user->d_referred_by = $d_referred_by;
     $user->e_referred_by = $e_referred_by; // Added e_referred_by
     $user->registered_datetime = Carbon::now();
+    $user->monthly_salary = 25000;
     $user->save();
 
     // Generate refer code
