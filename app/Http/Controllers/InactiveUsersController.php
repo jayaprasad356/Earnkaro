@@ -85,10 +85,10 @@ class InactiveUsersController extends Controller
     
                 // Insert a transaction record for the activation
                 DB::table('transactions')->insert([
-                    'user_id' => $user_id,
-                    'referred_user_id' => $id,
+                    'user_id' => $id,
                     'type' => 'level_1_activate',
                     'amount' => 0,
+                    'datetime' => now(),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
