@@ -23,7 +23,6 @@
                                     <th><?php echo e(__('ID')); ?></th>
                                     <th><?php echo e(__('User Name')); ?></th>
                                     <th><?php echo e(__('Mobile')); ?></th>
-                                    <th><?php echo e(__('Email')); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -32,7 +31,6 @@
                                         <td><?php echo e($user['id']); ?></td>
                                         <td><?php echo e($user['name'] ?? 'N/A'); ?></td>
                                         <td><?php echo e($user['mobile'] ?? 'N/A'); ?></td>
-                                        <td><?php echo e($user['email'] ?? 'N/A'); ?></td>
                                     </tr>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>

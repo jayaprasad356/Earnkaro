@@ -16,7 +16,7 @@
             <div class="card-body">
                 <!-- Display Available Recharge Balance -->
                 <div class="recharge-balance" style="position: absolute; top: 10px; right: 10px; font-size: 16px; background-color: #f1f1f1; padding: 5px 10px; border-radius: 5px;">
-                    <strong>{{ __('Available Recharge Balance: Rs') }} {{ $recharge }}</strong>
+                    <strong>{{ __('Available Recharge : Rs') }} {{ $recharge }}</strong>
                 </div>
 
                 <!-- Display the user details -->

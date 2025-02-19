@@ -22,7 +22,7 @@ class InactiveUsersController extends Controller
         // If user is found, get their balance, else default to 0
         $recharge = $user ? $user->recharge : 0;
     
-        // Fetch inactive users with status 0 and referred_by the session user's refer_code
+        // Fetch inactive users with status 0 and level_1_refer the session user's refer_code
         $users = Users::where('status', 0)
                       ->where('level_1_refer', $user->refer_code)
                       ->get();
@@ -80,6 +80,12 @@ class InactiveUsersController extends Controller
                 'message' => 'Selected user does not exist.'
             ]);
         }
+        if($selectedUser->status == 1){
+            return response()->json([
+                'success' => false,
+                'message' => 'User already activated.'
+            ]);
+        }
     
         DB::beginTransaction();
         try {
@@ -89,7 +95,9 @@ class InactiveUsersController extends Controller
     
             // **Level 1 Activation Check**
             if ($level == 1) {
-                $referralCount = Users::where('referred_by', $sessionUser->refer_code)->count();
+                $referralCount = Users::where('level_1_refer', $sessionUser->refer_code)
+                                      ->where('status', 1)
+                                      ->count();
                 if ($referralCount >= 3) {
                     return response()->json([
                         'success' => false,
@@ -110,7 +118,7 @@ class InactiveUsersController extends Controller
                     ]);
                 }
     
-                $level1ReferralCount = Users::where('referred_by', $level1User->refer_code)->count();
+                $level1ReferralCount = Users::where('level_1_refer', $level1User->refer_code)->count();
                 if ($level1ReferralCount >= 3) {
                     return response()->json([
                         'success' => false,

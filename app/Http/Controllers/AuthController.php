@@ -63,10 +63,10 @@ class AuthController extends Controller
     
         $refer_code = $user->refer_code;
         $columnMap = [
-            'b' => 'referred_by',
-            'c' => 'c_referred_by',
-            'd' => 'd_referred_by',
-            'e' => 'e_referred_by'
+            'b' => 'level_1_refer',
+            'c' => 'level_2_refer',
+            'd' => 'level_3_refer',
+            'e' => 'level_4_refer'
         ];
         
         $column = $columnMap[$level] ?? null;
@@ -81,7 +81,7 @@ class AuthController extends Controller
         // Fetch referred users with status 0
         $users = DB::table('users')
         ->where($column, $refer_code)
-        ->where('status', 0)
+        ->where('status', 1)
         ->orderBy('registered_datetime', 'desc') // Order by registered_datetime in descending order
         ->select('*', DB::raw("DATE(registered_datetime) AS registered_date"))
         ->get();

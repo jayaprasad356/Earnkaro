@@ -22,7 +22,6 @@
                                     <th>{{ __('ID') }}</th>
                                     <th>{{ __('User Name') }}</th>
                                     <th>{{ __('Mobile') }}</th>
-                                    <th>{{ __('Email') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -31,7 +30,6 @@
                                         <td>{{ $user['id'] }}</td>
                                         <td>{{ $user['name'] ?? 'N/A' }}</td>
                                         <td>{{ $user['mobile'] ?? 'N/A' }}</td>
-                                        <td>{{ $user['email'] ?? 'N/A' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
