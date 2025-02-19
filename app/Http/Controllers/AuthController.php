@@ -115,7 +115,7 @@ class AuthController extends Controller
     $pincode = $request->input('pincode');
     $gender = $request->input('gender');
     $password = $request->input('password');
-    $referred_by = $request->input('referred_by');
+    $level_1_refer = $request->input('level_1_refer');
 
     if (empty($name)) {
         return response()->json(['success' => false, 'message' => "Name is Empty"]);
@@ -148,44 +148,31 @@ class AuthController extends Controller
     if (empty($gender)) {
         return response()->json(['success' => false, 'message' => "gender is Empty"]);
     }
-    if (empty($referred_by)) {
-        return response()->json(['success' => false, 'message' => "Referred By is Empty"]);
+    if (empty($level_1_refer)) {
+        return response()->json(['success' => false, 'message' => "Level 1 Refer is Empty"]);
     }
 
-     // Check if referred_by is valid
-     if ($referred_by !== '5PL') {
-        $referrer = Users::where('refer_code', $referred_by)->first();
-        if (!$referrer) { return response()->json(['success' => false, 'message' => "Invalid Referred By"]); }
-    }
 
     // Check if mobile is already registered
     $existingUser = Users::where('mobile', $mobile)->first();
     if ($existingUser) { return response()->json(['success' => false, 'message' => "Mobile Number Already Registered"]); }
 
     // Handling referred_by logic for deeper referrals (4 levels)
-    $c_referred_by = '';
-    $d_referred_by = '';
-    $e_referred_by = '';
+    $level_2_refer = '';
+    $level_3_refer = '';
+    $level_4_refer = '';
 
-     // If the referred_by is not '5PL' (which means there's a valid refer_code)
-     if ($referred_by !== '5PL') {
-        // Step 1: Find ref1 (First level, c_referred_by)
-        $ref1 = Users::where('refer_code', $referred_by)->first();
-        if ($ref1) {
-            $c_referred_by = $ref1->referred_by;
-
-            // Step 2: Find ref2 (Second level, d_referred_by)
-            if ($c_referred_by) {
-                $ref2 = Users::where('refer_code', $c_referred_by)->first();
-                if ($ref2) {
-                    $d_referred_by = $ref2->referred_by;
-                    
-                    // Step 3: Find ref3 (Third level, e_referred_by)
-                    if ($d_referred_by) {
-                        $ref3 = Users::where('refer_code', $d_referred_by)->first();
-                        if ($ref3) {
-                            $e_referred_by = $ref3->referred_by;
-                        }
+    $ref1 = Users::where('refer_code', $level_1_refer)->first();
+    if ($ref1) {
+        $level_2_refer = $ref1->level_1_refer;
+        if ($level_2_refer) {
+            $ref2 = Users::where('refer_code', $level_2_refer)->first();
+            if ($ref2) {
+                $level_3_refer = $ref2->level_1_refer;
+                if ($level_3_refer) {
+                    $ref3 = Users::where('refer_code', $level_3_refer)->first();
+                    if ($ref3) {
+                        $level_4_refer = $ref3->level_1_refer;
                     }
                 }
             }
@@ -200,20 +187,24 @@ class AuthController extends Controller
     $user->pincode = $pincode;
     $user->gender = $gender;
     $user->password = $password;
-    $user->referred_by = $referred_by;
-    $user->c_referred_by = $c_referred_by;
-    $user->d_referred_by = $d_referred_by;
-    $user->e_referred_by = $e_referred_by; // Added e_referred_by
+    $user->level_1_refer = $level_1_refer;
+    $user->level_2_refer = $level_2_refer;
+    $user->level_3_refer = $level_3_refer;
+    $user->level_4_refer = $level_4_refer; // Added e_referred_by
     $user->registered_datetime = Carbon::now();
     $user->monthly_salary = 25000;
     $user->save();
 
     // Generate refer code
-    $refer_code = 'PL' . str_pad($user->id, 2, '0', STR_PAD_LEFT);
-    $user->refer_code = $refer_code;
-    $user->save();
-
-    return $user;
+    // $refer_code = 'PL' . str_pad($user->id, 2, '0', STR_PAD_LEFT);
+    // $user->refer_code = $refer_code;
+    // $user->save();
+    return response()->json([
+        'success' => true,
+        'message' => 'User registered successfully',
+        'data' => $user
+    ], 200);
+    
 }
 public function updateBankDetails(Request $request)
 {

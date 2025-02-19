@@ -24,7 +24,7 @@ class InactiveUsersController extends Controller
     
         // Fetch inactive users with status 0 and referred_by the session user's refer_code
         $users = Users::where('status', 0)
-                      ->where('referred_by', $user->refer_code)
+                      ->where('level_1_refer', $user->refer_code)
                       ->get();
     
         // Return the view with users and the balance value
@@ -233,7 +233,7 @@ class InactiveUsersController extends Controller
     
         // Call the API to fetch the users based on the user_id and level
         try {
-            $response = Http::post('https://earnkaro.graymatterworks.com/api/level', [
+            $response = Http::post('http://localhost/Earnkaro/api/level', [
                 'user_id' => $userId,
                 'level' => $mappedLevel  // Use mapped level
             ]);
@@ -277,11 +277,9 @@ class InactiveUsersController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'mobile' => 'required|string|max:15',
-            'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8',
+            'pincode' => 'required|string|min:6|max:6',
             'age' => 'required|integer|min:18', // Assuming age should be an integer and at least 18
-            'pincode' => 'required|string|max:6',
-            'state' => 'required|string|max:255',
             'gender' => 'required|string|max:255',
         ]);
     
@@ -298,31 +296,31 @@ class InactiveUsersController extends Controller
         $refer_code = $user->refer_code;  // Assuming 'refer_code' is a column in the 'users' table
     
         // API endpoint to register the user
-        $apiUrl = 'https://earnkaro.graymatterworks.com/api/register';  // Replace with your actual registration API URL
+        $apiUrl = 'http://localhost/Earnkaro/api/register';  // Replace with your actual registration API URL
     
         // Prepare the data to send to the API
         $apiData = [
             'name' => $validated['name'],
             'mobile' => $validated['mobile'],
-            'email' => $validated['email'],
             'password' => $validated['password'],  // Encrypt the password
-            'age' => $validated['age'],
             'pincode' => $validated['pincode'],
+            'age' => $validated['age'],
             'gender' => $validated['gender'],
-            'state' => $validated['state'],
-            'referred_by' => $refer_code, // Automatically use the logged-in user's refer_code from session
+            'level_1_refer' => $refer_code, // Automatically use the logged-in user's refer_code from session
         ];
     
         // Make the API request (you can also use other libraries like Guzzle if needed)
         $response = Http::post($apiUrl, $apiData);
     
         // Check if the registration was successful
-        if ($response->successful()) {
-            return redirect()->route('inactive_users.index')->with('success', 'User registered successfully.');
+        $responseData = $response->json(); // Decode the JSON response
+
+        if ($response->successful() && isset($responseData['success']) && $responseData['success'] === true) {
+            return redirect()->route('inactive_users.index')->with('success', $responseData['message'] ?? 'User registered successfully.');
         } else {
-            // Handle API error
-            return redirect()->route('inactive_users.addusers')->with('error', 'Registration failed. Please try again.');
+            return redirect()->route('inactive_users.addusers')->with('error', $responseData['message'] ?? 'Registration failed. Please try again.');
         }
+        
     }
     
     
