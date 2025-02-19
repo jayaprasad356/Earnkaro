@@ -87,7 +87,7 @@ class Utility extends Model
             "default_language" => "en",
             "display_landing_page" => "on",
             "ip_restrict" => "on",
-            "title_text" => "Hi-Earnkaro",
+            "title_text" => "Earnkaro",
             "footer_text" => "2025 - Earnkaro",
             "gdpr_cookie" => "",
             "cookie_text" => "",
