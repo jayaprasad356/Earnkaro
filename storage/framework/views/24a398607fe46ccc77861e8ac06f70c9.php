@@ -17,7 +17,7 @@
             <div class="card-body">
                 <!-- Display Available Recharge Balance -->
                 <div class="recharge-balance" style="position: absolute; top: 10px; right: 10px; font-size: 16px; background-color: #f1f1f1; padding: 5px 10px; border-radius: 5px;">
-                    <strong><?php echo e(__('Available Recharge Balance: Rs')); ?> <?php echo e($balance); ?></strong>
+                    <strong><?php echo e(__('Available Recharge Balance: Rs')); ?> <?php echo e($recharge); ?></strong>
                 </div>
 
                 <!-- Display the user details -->
@@ -102,43 +102,47 @@ $(document).ready(function() {
 </script>
 <script>
 $(document).ready(function () {
+    $(document).ready(function () {
     $('#activateUserBtn').click(function () {
-        // Function to get query parameters from the URL
         function getQueryParam(param) {
             var urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
 
-        var level = getQueryParam("level"); // Get level from URL
-        var userId, userName, userMobile;
+        var selectedLevel = getQueryParam("level");
+        var selectedUserId = null, selectedUserName = null, selectedUserMobile = null, level1UserId = null;
 
-        // If level > 1, get selected user from dropdown
-        if (level > 1) {
-            userId = $("#userDropdown").val();
-            userName = $("#userDropdown option:selected").data('name');
-            userMobile = $("#userDropdown option:selected").data('mobile');
+        if (selectedLevel > 1) {
+            level1UserId = $("#userDropdown").val(); // The selected Level 1 user ID
+            selectedUserName = $("#userDropdown option:selected").data('name');
+            selectedUserMobile = $("#userDropdown option:selected").data('mobile');
 
-            if (!userId) {
-                alert("Please select a user to activate.");
+            if (!level1UserId) {
+                alert("Please select a Level 1 user.");
                 return;
             }
-        } 
-        // If level = 1, get user ID from URL
-        else {
-            userId = getQueryParam("id");
-            userName = getQueryParam("name");
-            userMobile = getQueryParam("mobile");
+
+            selectedUserId = level1UserId; // Ensure this is passed to the server
+        } else {
+            selectedUserId = getQueryParam("id");
+            selectedUserName = getQueryParam("name");
+            selectedUserMobile = getQueryParam("mobile");
         }
 
-        // Make AJAX request to activate user
+        if (!selectedUserId) {
+            alert("No user selected for activation.");
+            return;
+        }
+
         $.ajax({
             url: "<?php echo e(route('inactive_users.activateusers')); ?>",
             type: 'GET',
             data: {
-                id: userId,
-                name: userName,
-                mobile: userMobile,
-                level: level
+                id: selectedUserId,
+                name: selectedUserName,
+                mobile: selectedUserMobile,
+                level: selectedLevel,
+                level1_user_id: level1UserId // Send selected user ID for verification
             },
             success: function (response) {
                 if (response.success) {
@@ -153,6 +157,8 @@ $(document).ready(function () {
             }
         });
     });
+});
+
 });
 
 
