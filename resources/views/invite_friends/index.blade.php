@@ -22,9 +22,11 @@
         </a>
 
         <!-- Contact Customer Support -->
-        <a href="mailto:{{ $customer_support_number }}" class="btn btn-warning d-block w-50 mb-2">
-            {{ __('Contact Customer Support') }}
-        </a>
+       <!-- Contact Customer Support (Opens WhatsApp) -->
+            <a href="https://wa.me/{{ $customer_support_number }}" target="_blank" class="btn btn-warning d-block w-50 mb-2">
+                {{ __('Contact Customer Support') }}
+            </a>
+
     </div>
 </div>
 

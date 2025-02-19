@@ -1,38 +1,35 @@
 
 
 <?php $__env->startSection('page-title'); ?>
-    <?php echo e(__('Invite Friends List')); ?>
+    <?php echo e(__('Help & Support List')); ?>
 
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('breadcrumb'); ?>
     <li class="breadcrumb-item"><a href="<?php echo e(route('dashboard')); ?>"><?php echo e(__('Home')); ?></a></li>
-    <li class="breadcrumb-item"><?php echo e(__('Invite Friends List')); ?></li>
+    <li class="breadcrumb-item"><?php echo e(__('Help & Support List')); ?></li>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
 <div class="card">
     <div class="card-body text">
-        <h5 class="card-title"><?php echo e(__('Invite Your Friends')); ?></h5>
+        <h5 class="card-title"><?php echo e(__('Help & Support')); ?></h5>
         
         <br>
-        <!-- Copy Invitation Link -->
-        <button class="btn btn-primary d-block w-50 mb-2">
-            <?php echo e(__('Help Support')); ?>
-
-        </button>
         
         <!-- Join Telegram Channel -->
-        <a href="<?php echo e($telegram_channel); ?>" target="_blank" class="btn btn-info d-block w-50 mb-2">
+        <a href="<?php echo e($telegram_link); ?>" target="_blank" class="btn btn-info d-block w-50 mb-2">
             <?php echo e(__('Join Telegram Channel')); ?>
 
         </a>
 
         <!-- Contact Customer Support -->
-        <a href="mailto:<?php echo e($customer_support); ?>" class="btn btn-warning d-block w-50 mb-2">
-            <?php echo e(__('Contact Customer Support')); ?>
+       <!-- Contact Customer Support (Opens WhatsApp) -->
+            <a href="https://wa.me/<?php echo e($customer_support_number); ?>" target="_blank" class="btn btn-warning d-block w-50 mb-2">
+                <?php echo e(__('Contact Customer Support')); ?>
 
-        </a>
+            </a>
+
     </div>
 </div>
 

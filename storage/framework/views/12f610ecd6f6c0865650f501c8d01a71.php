@@ -76,7 +76,7 @@ unset($__errorArgs, $__bag); ?>
                         <select class="form-control" id="gender" name="gender" required>
                             <option value=""><?php echo e(__('Select Gender')); ?></option>
                             <option value="male" <?php echo e(old('gender') == 'male' ? 'selected' : ''); ?>><?php echo e(__('male')); ?></option>
-                            <option value="female" <?php echo e(old('gender') == 'female' ? 'selected' : ''); ?>><?php echo e(__('female')); ?></option>
+                            <option value="female" <?php echo e(old('gender') == 'female' ? 'selected' : ''); ?>><?php echo e(__('Female')); ?></option>
                         </select>
                         <?php $__errorArgs = ['gender'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -88,31 +88,7 @@ endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
 
-                    <div class="form-group">
-                        <label for="email"><?php echo e(__('Email')); ?></label>
-                        <input type="email" class="form-control" id="email" name="email" required value="<?php echo e(old('email')); ?>">
-                        <?php $__errorArgs = ['email'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> <span class="text-danger"><?php echo e($message); ?></span> <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="state"><?php echo e(__('State')); ?></label>
-                        <input type="text" class="form-control" id="state" name="state" required value="<?php echo e(old('state')); ?>">
-                        <?php $__errorArgs = ['state'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> <span class="text-danger"><?php echo e($message); ?></span> <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                    </div>
+  
 
                     <div class="form-group">
                         <label for="password"><?php echo e(__('Password')); ?></label>

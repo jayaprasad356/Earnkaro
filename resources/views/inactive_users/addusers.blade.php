@@ -47,22 +47,12 @@
                         <select class="form-control" id="gender" name="gender" required>
                             <option value="">{{ __('Select Gender') }}</option>
                             <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('male') }}</option>
-                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>{{ __('female') }}</option>
+                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>{{ __('Female') }}</option>
                         </select>
                         @error('gender') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
 
-                    <div class="form-group">
-                        <label for="email">{{ __('Email') }}</label>
-                        <input type="email" class="form-control" id="email" name="email" required value="{{ old('email') }}">
-                        @error('email') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="state">{{ __('State') }}</label>
-                        <input type="text" class="form-control" id="state" name="state" required value="{{ old('state') }}">
-                        @error('state') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
+  
 
                     <div class="form-group">
                         <label for="password">{{ __('Password') }}</label>

@@ -13,8 +13,18 @@
 
         <!-- Login Title -->
         <div>
-           <center><h2 class="mb-3 f-w-600">{{ __('Greenkaro - Login page') }}</h2></center> 
+           <center><h2 class="mb-3 f-w-600">{{ __('Greenkaro - Login Page') }}</h2></center> 
         </div>
+
+        <!-- Error Alert for Authentication Failure -->
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{ session('error') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
 
         <!-- Login Form -->
         <div class="custom-login-form">
@@ -41,7 +51,7 @@
                     @enderror
                 </div>
                 <div class="d-grid">
-                    <button class="btn btn-primary mt-2" type="submit">{{ __('Login') }}</button>
+                    <button class="btn btn-primary mt-2 login_button" type="submit">{{ __('Login') }}</button>
                 </div>
             </form>
         </div>

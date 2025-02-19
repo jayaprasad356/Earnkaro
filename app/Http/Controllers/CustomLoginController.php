@@ -14,26 +14,37 @@ class CustomLoginController extends Controller
     }
 
     public function login(Request $request)
-    {
-        // Validate input
-        $request->validate([
-            'mobile' => 'required|exists:users,mobile',
-            'password' => 'required',
-        ]);
+{
+    // Validate input
+    $request->validate([
+        'mobile' => 'required|exists:users,mobile',
+        'password' => 'required',
+    ]);
 
-        // Find user by mobile number
-        $user = Users::where('mobile', $request->mobile)->first();
+    // Find user by mobile number
+    $user = Users::where('mobile', $request->mobile)->first();
 
-        // Manually verify password (without hashing)
-        if ($user && $request->password === $user->password) {
-            Session::put('user_id', $user->id); // Store user ID in session
-            Session::put('user_name', $user->name); // Store user name (optional)
+    // Check user existence and manually verify password (without hashing)
+    if ($user) {
+        if ($user->status == 0) {
+            return back()->withErrors(['mobile' => 'Your account is not activated.'])->withInput();
+        }
+
+        if ($user->status == 2) {
+            return back()->withErrors(['mobile' => 'Your account has been rejected.'])->withInput();
+        }
+
+        if ($request->password === $user->password) {
+            // Store user details in session
+            Session::put('user_id', $user->id);
+            Session::put('user_name', $user->name);
 
             return redirect()->route('dashboard')->with('success', 'Login successful');
         }
-
-        return back()->withErrors(['mobile' => 'Invalid credentials'])->withInput();
     }
+
+    return back()->withErrors(['mobile' => 'Invalid credentials'])->withInput();
+}
 
     public function logout()
     {

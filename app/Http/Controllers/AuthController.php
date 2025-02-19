@@ -114,8 +114,6 @@ class AuthController extends Controller
     $age = $request->input('age');
     $pincode = $request->input('pincode');
     $gender = $request->input('gender');
-    $email = $request->input('email');
-    $state = $request->input('state');
     $password = $request->input('password');
     $referred_by = $request->input('referred_by');
 
@@ -143,12 +141,7 @@ class AuthController extends Controller
     if (empty($pincode)) {
         return response()->json(['success' => false, 'message' => "pincode is Empty"]);
     }
-    if (empty($email)) {
-        return response()->json(['success' => false, 'message' => "Email is Empty"]);
-    }
-    if (empty($state)) {
-        return response()->json(['success' => false, 'message' => "State is Empty"]);
-    }
+ 
     if (empty($password)) {
         return response()->json(['success' => false, 'message' => "Password is Empty"]);
     }
@@ -206,8 +199,6 @@ class AuthController extends Controller
     $user->age = $age;
     $user->pincode = $pincode;
     $user->gender = $gender;
-    $user->email = $email;
-    $user->state = $state;
     $user->password = $password;
     $user->referred_by = $referred_by;
     $user->c_referred_by = $c_referred_by;

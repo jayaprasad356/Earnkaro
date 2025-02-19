@@ -23,7 +23,7 @@
     <div class="m-header main-logo">
         <a href="<?php echo e(route('dashboard')); ?>" class="b-brand">
             <!-- ========   change your logo hear   ============ -->
-            <img src="<?php echo e(asset('storage/uploads/logo/jiyo.jpeg')); ?>" alt="Logo"
+            <img src="<?php echo e(asset('storage/uploads/logo/greenkaro.png')); ?>" alt="Logo"
                 alt="<?php echo e(config('app.name', 'HRMGo')); ?>" class="logo logo-lg" style="height: 50px;">
         </a>
     </div>
@@ -82,7 +82,7 @@
                 <li class="dash-item">
                     <a href="<?php echo e(route('invite_friends.index')); ?>" class="dash-link">
                         <span class="dash-micon"><i class="ti ti-user-plus"></i></span> <!-- User-plus icon for invite friends -->
-                        <span class="dash-mtext"><?php echo e(__('Invite Friends')); ?></span>
+                        <span class="dash-mtext"><?php echo e(__('Help & Support')); ?></span>
                     </a>
                 </li>
 

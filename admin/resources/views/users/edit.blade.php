@@ -101,20 +101,10 @@
                             {{ Form::text('mobile', null, ['class' => 'form-control', 'required']) }}
                         </div>
 
-                        <div class="form-group col-md-6">
-                            {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}
-                            {{ Form::text('email', null, ['class' => 'form-control', 'required']) }}
-                        </div>
-
                         <!-- Age -->
                         <div class="form-group col-md-6">
                             {{ Form::label('age', __('Age'), ['class' => 'form-label']) }}
                             {{ Form::number('age', null, ['class' => 'form-control']) }}
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            {{ Form::label('state', __('State'), ['class' => 'form-label']) }}
-                            {{ Form::number('state', null, ['class' => 'form-control']) }}
                         </div>
 
 

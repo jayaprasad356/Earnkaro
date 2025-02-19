@@ -48,12 +48,10 @@ class UsersController extends Controller
         $user = Users::findOrFail($id);
 
         $user->name = $request->name;
-        $user->email = $request->email;
         $user->mobile = $request->mobile;
         $user->password = $request->password; 
         $user->age = $request->age;
         $user->status = $request->status;
-        $user->state = $request->state;
         $user->pincode = $request->pincode;
         $user->gender = $request->gender; 
         $user->refer_code = $request->refer_code;

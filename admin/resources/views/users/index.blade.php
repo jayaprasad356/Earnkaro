@@ -39,7 +39,6 @@
                                 <th>{{ __('Mobile') }}</th>
                                 <th>{{ __('Age') }}</th>
                                 <th>{{ __('Gender') }}</th>
-                                <th>{{ __('Email') }}</th>
                                 <th>{{ __('Balance') }}</th>
                                 <th>{{ __('Refer Code') }}</th>
                                 <th>{{ __('Referred By') }}</th>
@@ -78,7 +77,6 @@
                                     <td>{{ $user->mobile }}</td>
                                     <td>{{ $user->age }}</td>
                                     <td>{{ ucfirst($user->gender) }}</td>
-                                    <td>{{ $user->email }}</td>
                                     <td>{{ $user->balance }}</td>
                                     <td>{{ $user->refer_code }}</td>
                                     <td>{{ $user->referred_by }}</td>
