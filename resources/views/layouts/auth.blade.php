@@ -78,7 +78,7 @@
     <meta name="author" content="Rajodiya Infotech" />
 
     <!-- Favicon icon -->
-    <link rel="icon" href="{{ asset('storage/uploads/logo/jiyo.jpeg') }}" type="image/x-icon" />
+    <link rel="icon" href="{{ asset('storage/uploads/logo/greenkaro.png') }}" type="image/x-icon" />
 
     <!-- font css -->
     <link rel="stylesheet" href="{{ asset('assets/fonts/tabler-icons.min.css') }}">

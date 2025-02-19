@@ -1,24 +1,20 @@
 @extends('layouts.admin')
 
 @section('page-title')
-    {{ __('Invite Friends List') }}
+    {{ __('Help & Support List') }}
 @endsection
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Home') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Invite Friends List') }}</li>
+    <li class="breadcrumb-item">{{ __('Help & Support List') }}</li>
 @endsection
 
 @section('content')
 <div class="card">
     <div class="card-body text">
-        <h5 class="card-title">{{ __('Invite Your Friends') }}</h5>
+        <h5 class="card-title">{{ __('Help & Support') }}</h5>
         
         <br>
-        <!-- Copy Invitation Link -->
-        <button class="btn btn-primary d-block w-50 mb-2">
-            {{ __('Help Support') }}
-        </button>
         
         <!-- Join Telegram Channel -->
         <a href="{{ $telegram_link }}" target="_blank" class="btn btn-info d-block w-50 mb-2">

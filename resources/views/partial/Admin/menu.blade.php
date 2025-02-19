@@ -23,7 +23,7 @@
     <div class="m-header main-logo">
         <a href="{{ route('dashboard') }}" class="b-brand">
             <!-- ========   change your logo hear   ============ -->
-            <img src="{{ asset('storage/uploads/logo/jiyo.jpeg') }}" alt="Logo"
+            <img src="{{ asset('storage/uploads/logo/greenkaro.png') }}" alt="Logo"
                 alt="{{ config('app.name', 'HRMGo') }}" class="logo logo-lg" style="height: 50px;">
         </a>
     </div>
@@ -82,7 +82,7 @@
                 <li class="dash-item">
                     <a href="{{ route('invite_friends.index') }}" class="dash-link">
                         <span class="dash-micon"><i class="ti ti-user-plus"></i></span> <!-- User-plus icon for invite friends -->
-                        <span class="dash-mtext">{{ __('Invite Friends') }}</span>
+                        <span class="dash-mtext">{{ __('Help & Support') }}</span>
                     </a>
                 </li>
 

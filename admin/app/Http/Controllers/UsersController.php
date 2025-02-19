@@ -12,7 +12,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $filterDate = $request->get('filter_date') ?: now()->toDateString(); // Defaults to today's dat
+        $filterDate = $request->get('filter_date');
     
         $users = Users::query()
             ->when(!$search, function ($query) use ($filterDate) {

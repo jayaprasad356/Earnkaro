@@ -60,7 +60,7 @@
 
     <!-- Favicon icon -->
     <link rel="icon"
-        href="{{ asset('storage/uploads/logo/jiyo.jpeg') }}"
+        href="{{ asset('storage/uploads/logo/greenkaro.png') }}"
         type="image/x-icon" />
     <!-- for calender-->
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/main.css') }}">
