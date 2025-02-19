@@ -12,11 +12,11 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $filterDate = $request->get('filter_date');
+        $filterDate = $request->get('filter_date'); // Optional filter date
     
         $users = Users::query()
-            ->when(!$search, function ($query) use ($filterDate) {
-                // Filter only users created today (without time)
+            ->when($filterDate, function ($query) use ($filterDate) {
+                // Filter users by the provided date (without time)
                 return $query->whereDate('created_at', $filterDate);
             })
             ->when($search, function ($query) use ($search) {
@@ -25,7 +25,6 @@ class UsersController extends Controller
                           ->orWhere('mobile', 'like', '%' . $search . '%');
                 });
             })
-          
             ->orderBy('created_at', 'desc')
             ->get();
     
