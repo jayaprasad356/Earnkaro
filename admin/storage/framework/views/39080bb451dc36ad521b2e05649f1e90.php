@@ -61,7 +61,7 @@
 
     <!-- Favicon icon -->
     <link rel="icon"
-        href="<?php echo e(asset('storage/uploads/logo/hidude.png')); ?>"
+        href="<?php echo e(asset('storage/uploads/logo/jiyo.jpeg')); ?>"
         type="image/x-icon" />
     <!-- for calender-->
     <link rel="stylesheet" href="<?php echo e(asset('assets/css/plugins/main.css')); ?>">

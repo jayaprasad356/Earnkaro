@@ -96,6 +96,31 @@ class UsersController extends Controller
            return redirect()->route('users.index')->with('success', 'Balance Added Successfully.');
        }
 
+            // Handle Add Coins form submission
+            public function addRecharge(Request $request, $id)
+            {
+                // Validate the input
+                $request->validate([
+                    'recharge' => 'required|numeric|min:1',
+                ]);
+        
+                $user = Users::findOrFail($id); // Retrieve the user by ID
+        
+                // Update the user's coins
+                $user->recharge += $request->input('recharge');
+                $user->save();
+        
+                // Create a new transaction record
+                Transactions::create([
+                    'user_id' => $user->id,
+                    'type' => 'recharge',
+                    'amount' => $request->input('recharge'),
+                    'datetime' => now(),
+                ]);
+        
+                return redirect()->route('users.index')->with('success', 'Recharge Added Successfully.');
+            }
+
     // Delete a user
     public function destroy($id)
     {

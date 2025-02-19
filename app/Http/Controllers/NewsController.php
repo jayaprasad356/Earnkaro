@@ -14,8 +14,8 @@ class NewsController extends Controller
     
         return view('invite_friends.index', [
             'invitation_link' => $news->invitation_link,
-            'telegram_channel' => $news->telegram_channel,
-            'customer_support' => $news->customer_support,
+            'telegram_link' => $news->telegram_link,
+            'customer_support_number' => $news->customer_support_number,
         ]);
     }
     

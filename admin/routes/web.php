@@ -317,7 +317,7 @@ Route::put('withdrawals/{id}', [WithdrawalsController::class, 'update'])->name('
     Route::post('/usercalls/update-user', [UserCallsController::class, 'updateuser'])->name('usercalls.updateuser');
 
     // Route to handle the "Add Coins" form submission
-    Route::post('users/{id}/add-coins', [UsersController::class, 'addCoins'])->name('users.addCoins');  
+    Route::post('users/{id}/add-recharge', [UsersController::class, 'addRecharge'])->name('users.addRecharge');  
     Route::post('users/{id}/add-balance', [UsersController::class, 'addBalance'])->name('users.addBalance');
     Route::get('/search-users', [NotificationsController::class, 'searchUsers'])->name('search.users');
     Route::get('/users/{id}', function ($id) {

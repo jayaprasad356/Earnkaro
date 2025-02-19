@@ -21,12 +21,12 @@
         </button>
         
         <!-- Join Telegram Channel -->
-        <a href="{{ $telegram_channel }}" target="_blank" class="btn btn-info d-block w-50 mb-2">
+        <a href="{{ $telegram_link }}" target="_blank" class="btn btn-info d-block w-50 mb-2">
             {{ __('Join Telegram Channel') }}
         </a>
 
         <!-- Contact Customer Support -->
-        <a href="mailto:{{ $customer_support }}" class="btn btn-warning d-block w-50 mb-2">
+        <a href="mailto:{{ $customer_support_number }}" class="btn btn-warning d-block w-50 mb-2">
             {{ __('Contact Customer Support') }}
         </a>
     </div>

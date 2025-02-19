@@ -44,7 +44,6 @@ class WorksController extends Controller
     }
 
 
-    
     public function bulkUpdateStatus(Request $request)
     {
         // Validate the request to ensure work IDs and status are provided
@@ -53,15 +52,41 @@ class WorksController extends Controller
             'works_ids.*' => 'exists:works,id',
             'new_status' => 'required|integer|in:1,2', // Only allow 1 (Paid) or 2 (Cancelled)
         ]);
-
+    
         $status = (int) $request->new_status;
-
+    
         // Update the status of the selected works
         Works::whereIn('id', $request->works_ids)->update(['status' => $status]);
-
+    
+        if ($status === 1) {
+            // Fetch the latest or first available whatsapp_status_income from the news table
+            $newsData = DB::table('news')->latest()->first(); // Get the latest record
+            $amount = $newsData->whatsapp_status_income ?? 0; // Default to 0 if not found
+    
+            // Fetch works with user details
+            $works = Works::whereIn('id', $request->works_ids)->with('users')->get();
+    
+            foreach ($works as $work) {
+                $user = $work->users;
+    
+                if ($user) { // Ensure user exists
+                    // Insert into transactions table
+                    DB::table('transactions')->insert([
+                        'user_id' => $user->id,
+                        'amount' => $amount,
+                        'type' => 'whatsapp_status_income',
+                        'datetime' => now(),
+                    ]);
+    
+                    // Update user's whatsapp_status_income and refer_income fields
+                    $user->increment('whatsapp_status_income', $amount);
+                }
+            }
+        }
+    
         // Return the response with a success message
         return redirect()->route('works.index')->with('success', 'Works status updated successfully.');
     }
-
+    
   
 }

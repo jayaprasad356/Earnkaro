@@ -81,6 +81,7 @@
         <div class="card">
             <div class="card-header">
                  <!-- Open Modal for Add Coins -->
+                 <a href="#" data-bs-toggle="modal" data-bs-target="#addRechargeModal" class="btn btn-primary ms-auto"><?php echo e(__('Add Recharge')); ?></a>
                 <a href="#" data-bs-toggle="modal" data-bs-target="#addBalanceModal" class="btn btn-success ms-auto"><?php echo e(__('Add Balance')); ?></a>
             </div>
 
@@ -247,23 +248,23 @@ unset($__errorArgs, $__bag); ?>
 </div>
 
 <!-- Modal for Add Coins -->
-<div class="modal fade" id="addCoinsModal" tabindex="-1" aria-labelledby="addCoinsModalLabel" aria-hidden="true">
+<div class="modal fade" id="addRechargeModal" tabindex="-1" aria-labelledby="addCoinsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCoinsModalLabel"><?php echo e(__('Add Coins to user')); ?></h5>
+                <h5 class="modal-title" id="addRechargeModalLabel"><?php echo e(__('Add Recharge to user')); ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="<?php echo e(route('users.addCoins', $user->id)); ?>" method="POST">
+                <form action="<?php echo e(route('users.addRecharge', $user->id)); ?>" method="POST">
                     <?php echo csrf_field(); ?>
                     <div class="form-group">
-                        <label for="coins"><?php echo e(__('Coins to Add')); ?></label>
-                        <input type="number" id="coins" name="coins" class="form-control" required>
+                        <label for="recharge"><?php echo e(__('Recharge to Add')); ?></label>
+                        <input type="number" id="recharge" name="recharge" class="form-control" required>
                     </div>
 
                     <div class="form-group mt-3">
-                        <button type="submit" class="btn btn-primary"><?php echo e(__('Add Coins')); ?></button>
+                        <button type="submit" class="btn btn-primary"><?php echo e(__('Add Recharge')); ?></button>
                     </div>
                 </form>
             </div>

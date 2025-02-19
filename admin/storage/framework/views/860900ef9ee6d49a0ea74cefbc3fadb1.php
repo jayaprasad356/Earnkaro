@@ -79,7 +79,7 @@
     <meta name="author" content="Rajodiya Infotech" />
 
     <!-- Favicon icon -->
-    <link rel="icon" href="<?php echo e(asset('storage/uploads/logo/hidude.png')); ?>" type="image/x-icon" />
+    <link rel="icon" href="<?php echo e(asset('storage/uploads/logo/jiyo.jpeg')); ?>" type="image/x-icon" />
 
     <!-- font css -->
     <link rel="stylesheet" href="<?php echo e(asset('assets/fonts/tabler-icons.min.css')); ?>">

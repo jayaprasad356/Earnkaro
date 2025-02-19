@@ -15,14 +15,14 @@ class NewsController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'privacy_policy' => 'required|string',
-            'support_mail' => 'required|string',
-            'demo_video' => 'required|string',
+            'telegram_link' => 'required|string',
+            'customer_support_number' => 'required|string',
             'minimum_withdrawals' => 'required|string',
+            'whatsapp_status_income' => 'required|string',
         ]);
 
         $news = News::findOrFail(1); // Editing record with ID 1
-        $news->update($request->only(['privacy_policy', 'support_mail', 'demo_video', 'minimum_withdrawals']));
+        $news->update($request->only(['telegram_link', 'customer_support_number','minimum_withdrawals','whatsapp_status_income']));
 
         return redirect()->route('news.edit')->with('success', 'Settings updated successfully.');
     }

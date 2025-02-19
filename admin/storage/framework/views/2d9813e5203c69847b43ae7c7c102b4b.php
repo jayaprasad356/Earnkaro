@@ -21,25 +21,24 @@
         <form action="<?php echo e(route('news.update', $news->id)); ?>" method="POST">
             <?php echo csrf_field(); ?>
             <?php echo method_field('PUT'); ?>
-
             <div class="form-group">
-                <label for="privacy_policy">Privacy Policy</label>
-                <textarea name="privacy_policy" id="privacy_policy" class="form-control ckeditor-content" rows="10" required><?php echo $news->privacy_policy; ?></textarea>
+                <label for="telegram_link">Telegram Link</label>
+                <input type="text" class="form-control" id="telegram_link" name="telegram_link" value="<?php echo e($news->telegram_link); ?>" required>
             </div>
 
             <div class="form-group">
-                <label for="support_mail">Support Mail</label>
-                <input type="email" class="form-control" id="support_mail" name="support_mail" value="<?php echo e($news->support_mail); ?>" required>
-            </div>
-
-            <div class="form-group">
-                <label for="demo_video">Demo Video</label>
-                <input type="text" class="form-control" id="demo_video" name="demo_video" value="<?php echo e($news->demo_video); ?>" required>
+                <label for="support_mail">Customer Support Number</label>
+                <input type="number" class="form-control" id="customer_support_number" name="customer_support_number" value="<?php echo e($news->customer_support_number); ?>" required>
             </div>
 
             <div class="form-group">
                 <label for="minimum_withdrawals">Minimum Withdrawals</label>
-                <input type="text" class="form-control" id="minimum_withdrawals" name="minimum_withdrawals" value="<?php echo e($news->minimum_withdrawals); ?>" required>
+                <input type="number" class="form-control" id="minimum_withdrawals" name="minimum_withdrawals" value="<?php echo e($news->minimum_withdrawals); ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="whatsapp_status_income">Whatsapp Status Income</label>
+                <input type="number" class="form-control" id="whatsapp_status_income" name="whatsapp_status_income" value="<?php echo e($news->whatsapp_status_income); ?>" required>
             </div>
 
             <div class="box-footer">
