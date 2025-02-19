@@ -37,9 +37,19 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="city">{{ __('City') }}</label>
-                        <input type="text" class="form-control" id="city" name="city" required value="{{ old('city') }}">
-                        @error('city') <span class="text-danger">{{ $message }}</span> @enderror
+                        <label for="pincode">{{ __('Pincode') }}</label>
+                        <input type="text" class="form-control" id="pincode" name="pincode" required value="{{ old('pincode') }}">
+                        @error('pincode') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">{{ __('Gender') }}</label>
+                        <select class="form-control" id="gender" name="gender" required>
+                            <option value="">{{ __('Select Gender') }}</option>
+                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>{{ __('male') }}</option>
+                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>{{ __('female') }}</option>
+                        </select>
+                        @error('gender') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="form-group">

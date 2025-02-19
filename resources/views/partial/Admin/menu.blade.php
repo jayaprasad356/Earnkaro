@@ -37,38 +37,33 @@
                 </li>
         
                 <li class="dash-item">
-                <a href="#" class="dash-link" id="levels-toggle">
-                    <span class="dash-micon"><i class="ti ti-building"></i></span>
-                    <span class="dash-mtext">{{ __('Levels') }}</span>
-                </a>
-                <ul class="list-unstyled" id="levels-menu" style="display: none;">
-                    <li>
-                        <a href="{{ route('level_1.index') }}" class="dash-link">
-                            <span class="dash-micon"><i class="ti ti-users"></i></span>
-                            <span class="dash-mtext">{{ __('Level 1') }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('level_2.index') }}" class="dash-link">
-                            <span class="dash-micon"><i class="ti ti-users"></i></span>
-                            <span class="dash-mtext">{{ __('Level 2') }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('level_3.index') }}" class="dash-link">
-                            <span class="dash-micon"><i class="ti ti-users"></i></span>
-                            <span class="dash-mtext">{{ __('Level 3') }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('level_4.index') }}" class="dash-link">
-                            <span class="dash-micon"><i class="ti ti-users"></i></span>
-                            <span class="dash-mtext">{{ __('Level 4') }}</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-               
+                    <a href="#" class="dash-link" id="levels-toggle">
+                        <span class="dash-micon"><i class="ti ti-building"></i></span>
+                        <span class="dash-mtext">{{ __('Levels') }}</span>
+                    </a>
+                    <ul class="list-unstyled" id="levels-menu" style="display: none; padding-left: 60px; list-style-type: disc;">
+                        <li>
+                            <a href="{{ route('level_1.index') }}" class="dash-link">
+                                <span class="dash-mtext">{{ __('Level 1') }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('level_2.index') }}" class="dash-link">
+                                <span class="dash-mtext">{{ __('Level 2') }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('level_3.index') }}" class="dash-link">
+                                <span class="dash-mtext">{{ __('Level 3') }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('level_4.index') }}" class="dash-link">
+                                <span class="dash-mtext">{{ __('Level 4') }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="dash-item">
                     <a href="{{ route('works.index') }}" class="dash-link">
@@ -90,6 +85,16 @@
                         <span class="dash-mtext">{{ __('Invite Friends') }}</span>
                     </a>
                 </li>
+
+                <li class="dash-item">
+                <a href="{{ route('bankdetails.update') }}" class="dash-link">
+                    <span class="dash-micon">
+                        <i class="ti ti-wallet"></i> <!-- Icon for withdrawals -->
+                    </span>
+                    <span class="dash-mtext">{{ __('Bank Details') }}</span>
+                </a>
+                </li>
+
 
                 <li class="dash-item">
                 <a href="{{ route('transactions.index') }}" class="dash-link">

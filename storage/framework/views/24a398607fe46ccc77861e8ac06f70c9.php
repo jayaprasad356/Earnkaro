@@ -103,49 +103,58 @@ $(document).ready(function() {
 <script>
 $(document).ready(function () {
     $('#activateUserBtn').click(function () {
-        var userId = "<?php echo e(Session::get('user_id')); ?>"; // Get logged-in user ID from session
-        var level = "<?php echo e($level); ?>"; // Get the level from the Blade variable
-        var selectedUserId = $("#userDropdown").val(); // Get the selected user ID from the dropdown
-
-        // Make sure the user selected a user to activate
-        if (!selectedUserId && level > 1) {
-            alert("Please select a user to activate.");
-            return;
+        // Function to get query parameters from the URL
+        function getQueryParam(param) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
         }
 
-        // For level 1, we don't need to use the dropdown; just pass the ID of the user to activate.
-        if (level == 1) {
-            selectedUserId = userId; // For level 1, we're activating the logged-in user
+        var level = getQueryParam("level"); // Get level from URL
+        var userId, userName, userMobile;
+
+        // If level > 1, get selected user from dropdown
+        if (level > 1) {
+            userId = $("#userDropdown").val();
+            userName = $("#userDropdown option:selected").data('name');
+            userMobile = $("#userDropdown option:selected").data('mobile');
+
+            if (!userId) {
+                alert("Please select a user to activate.");
+                return;
+            }
+        } 
+        // If level = 1, get user ID from URL
+        else {
+            userId = getQueryParam("id");
+            userName = getQueryParam("name");
+            userMobile = getQueryParam("mobile");
         }
 
-        var userName = $("#userDropdown option:selected").data('name') || ''; // Get the name (for level > 1)
-        var userMobile = $("#userDropdown option:selected").data('mobile') || ''; // Get the mobile (for level > 1)
-
-        // Make the GET request to activate the user
+        // Make AJAX request to activate user
         $.ajax({
             url: "<?php echo e(route('inactive_users.activateusers')); ?>",
             type: 'GET',
             data: {
-                id: selectedUserId,
+                id: userId,
                 name: userName,
                 mobile: userMobile,
                 level: level
             },
-            success: function(response) {
+            success: function (response) {
                 if (response.success) {
-                    alert('User activated successfully!'); // Show success message
-                    // Optionally, you can reload the page or update the UI
-                    location.reload(); // Reload the page to reflect the changes
+                    alert('User activated successfully!');
+                    window.location.href = "<?php echo e(route('inactive_users.index')); ?>";
                 } else {
-                    alert('Failed to activate user. ' + response.message); // Show error message
+                    alert('Failed to activate user. ' + response.message);
                 }
             },
-            error: function(xhr, status, error) {
-                alert('Error: ' + error); // Handle any AJAX errors
+            error: function () {
+                alert('Error activating user.');
             }
         });
     });
 });
+
 
 
 </script>

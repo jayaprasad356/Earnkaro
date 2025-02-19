@@ -38,7 +38,7 @@
             <img alt="#" src="{{ asset('storage/uploads/avatar/avatar.png') }}" class="header-avtar"
                 style="width: 100%; border-radius:50%">
         </span>
-        <span class="hide-mob ms-2">{{ __('Hi Admin') }}</span>
+        <span class="hide-mob ms-2">{{ __('Hi ') . session('user_name', 'Guest') }}</span>
         <i class="ti ti-chevron-down drp-arrow nocolor hide-mob"></i>
     </a>
 
@@ -55,6 +55,7 @@
         </form>
     </div>
 </li>
+
 
 
 

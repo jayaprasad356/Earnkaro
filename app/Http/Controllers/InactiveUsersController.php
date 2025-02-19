@@ -20,13 +20,15 @@ class InactiveUsersController extends Controller
         $user = Users::find($user_id);
     
         // If user is found, get their balance, else default to 0
-        $balance = $user ? $user->balance : 0;
+        $recharge = $user ? $user->recharge : 0;
     
-        // Fetch inactive users with status 0 from the database
-        $users = Users::where('status', 0)->get();
+        // Fetch inactive users with status 0 and referred_by the session user's refer_code
+        $users = Users::where('status', 0)
+                      ->where('referred_by', $user->refer_code)
+                      ->get();
     
         // Return the view with users and the balance value
-        return view('inactive_users.index', compact('users', 'balance'));
+        return view('inactive_users.index', compact('users', 'recharge'));
     }
 
     public function activate(Request $request)
@@ -38,7 +40,7 @@ class InactiveUsersController extends Controller
         $user = Users::find($user_id);
         
         // If user is found, get their balance, else default to 0
-        $balance = $user ? $user->balance : 0;
+        $recharge = $user ? $user->recharge : 0;
         
         // Get the user details (id, name, mobile, level) from the query parameters
         $id = $request->query('id');  // use 'id' instead of 'userId'
@@ -47,72 +49,95 @@ class InactiveUsersController extends Controller
         $level = $request->query('level');
         
         // Return the activation view with the user details, level, and balance
-        return view('inactive_users.activate', compact('user', 'id', 'userName', 'userMobile', 'level', 'balance'));
+        return view('inactive_users.activate', compact('user', 'id', 'userName', 'userMobile', 'level', 'recharge'));
     }
-
     public function activateusers(Request $request)
     {
+        // Get session user (the one activating another user)
         $user_id = Session::get('user_id');
-        $user = Users::find($user_id);
-        $balance = $user ? $user->balance : 0;
     
-        // Get the user details (id, name, mobile, level) from the query parameters
-        $id = $request->query('id');
-        $userName = $request->query('name');
-        $userMobile = $request->query('mobile');
-        $level = $request->query('level');
+        $sessionUser = Users::find($user_id);
+        if (!$sessionUser) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Session expired. Please log in again.'
+            ]);
+        }
     
-        // If level is 1, check if the user has activated 3 users already
-        if ($level == 1) {
-            // Count how many level 1 users have been activated by the current user (user_id)
-            $referralCount = Users::where('referred_by', $user_id)->count();
+        // Check session user's balance
+        if ($sessionUser->recharge< 299) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your Recharge balance is too low to activate a user.'
+            ]);
+        }
     
-            // If there are already 3 referrals for Level 1, don't allow activation
-            if ($referralCount >= 3) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You have already activated 3 users for Level 1.'
-                ]);
-            }
+        // Get session user's referral code
+        $refer_code = $sessionUser->refer_code;
+        if (!$refer_code) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your referral code is missing. Please contact support.'
+            ]);
+        }
     
-            // Proceed with the activation if less than 3 users
-            // Activate the selected user (update their status)
-            $selectedUser = Users::find($id);
-            if ($selectedUser) {
-                $selectedUser->status = 1; // Update user status to active
-                $selectedUser->referred_by = $user_id;  // Set the referring user ID
-                $selectedUser->save();
+        // Check referral limit (max 3 users)
+        $referralCount = Users::where('referred_by', $refer_code)->count();
+        if ($referralCount >= 3) {
+            return response()->json([
+                'success' => false,
+                'message' => 'only 3 members are allowed in level 1.'
+            ]);
+        }
     
-                // Insert a transaction record for the activation
-                DB::table('transactions')->insert([
-                    'user_id' => $id,
-                    'type' => 'level_1_activate',
-                    'amount' => 0,
-                    'datetime' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-    
-                // Return success response
-                return response()->json([
-                    'success' => true,
-                    'message' => 'User activated successfully for Level 1.'
-                ]);
-            }
-    
-            // If selected user doesn't exist
+        // Get the selected user to activate
+        $selectedUser = Users::find($request->query('id'));
+        if (!$selectedUser) {
             return response()->json([
                 'success' => false,
                 'message' => 'Selected user does not exist.'
             ]);
         }
     
-        // Logic for other levels can go here (if necessary)
+        // Proceed with activation
+        try {
+            DB::beginTransaction();
+    
+            // Activate selected user & update referred_by field
+            $selectedUser->status = 1;
+            $selectedUser->save();
+    
+            // Deduct balance from session user
+            $sessionUser->recharge -= 299;
+            $sessionUser->save();
+    
+            // Log transaction
+            DB::table('transactions')->insert([
+                'user_id' => $selectedUser->id, // Session user (who is activating)r
+                'type' => 'level_1_activate',
+                'amount' => 299,
+                'datetime' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+    
+            DB::commit();
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'User activated successfully.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred: ' . $e->getMessage()
+            ]);
+        }
     }
     
-
-
-  
+    
+    
     public function getLevelUsers(Request $request)
     {
         $userId = $request->input('user_id');
@@ -136,7 +161,7 @@ class InactiveUsersController extends Controller
     
         // Call the API to fetch the users based on the user_id and level
         try {
-            $response = Http::post('http://localhost/Earnkaro/api/level', [
+            $response = Http::post('https://earnkaro.graymatterworks.com/api/level', [
                 'user_id' => $userId,
                 'level' => $mappedLevel  // Use mapped level
             ]);
@@ -183,8 +208,9 @@ class InactiveUsersController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8',
             'age' => 'required|integer|min:18', // Assuming age should be an integer and at least 18
-            'city' => 'required|string|max:255',
+            'pincode' => 'required|string|max:6',
             'state' => 'required|string|max:255',
+            'gender' => 'required|string|max:255',
         ]);
     
         // Get the logged-in user's information from session
@@ -209,7 +235,8 @@ class InactiveUsersController extends Controller
             'email' => $validated['email'],
             'password' => $validated['password'],  // Encrypt the password
             'age' => $validated['age'],
-            'city' => $validated['city'],
+            'pincode' => $validated['pincode'],
+            'gender' => $validated['gender'],
             'state' => $validated['state'],
             'referred_by' => $refer_code, // Automatically use the logged-in user's refer_code from session
         ];

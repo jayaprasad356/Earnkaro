@@ -240,7 +240,8 @@ class AuthController extends Controller
     $name = $request->input('name');
     $mobile = $request->input('mobile');
     $age = $request->input('age');
-    $city = $request->input('city');
+    $pincode = $request->input('pincode');
+    $gender = $request->input('gender');
     $email = $request->input('email');
     $state = $request->input('state');
     $password = $request->input('password');
@@ -267,8 +268,8 @@ class AuthController extends Controller
     if (empty($age)) {
         return response()->json(['success' => false, 'message' => "Age is Empty"]);
     }
-    if (empty($city)) {
-        return response()->json(['success' => false, 'message' => "City is Empty"]);
+    if (empty($pincode)) {
+        return response()->json(['success' => false, 'message' => "pincode is Empty"]);
     }
     if (empty($email)) {
         return response()->json(['success' => false, 'message' => "Email is Empty"]);
@@ -278,6 +279,9 @@ class AuthController extends Controller
     }
     if (empty($password)) {
         return response()->json(['success' => false, 'message' => "Password is Empty"]);
+    }
+    if (empty($gender)) {
+        return response()->json(['success' => false, 'message' => "gender is Empty"]);
     }
     if (empty($referred_by)) {
         return response()->json(['success' => false, 'message' => "Referred By is Empty"]);
@@ -328,7 +332,8 @@ class AuthController extends Controller
     $user->name = $name;
     $user->mobile = $mobile;
     $user->age = $age;
-    $user->city = $city;
+    $user->pincode = $pincode;
+    $user->gender = $gender;
     $user->email = $email;
     $user->state = $state;
     $user->password = $password;
@@ -347,4 +352,85 @@ class AuthController extends Controller
 
     return $user;
 }
+public function updateBankDetails(Request $request)
+{
+    $user_id = $request->input('user_id');
+    $account_num = $request->input('account_num');
+    $holder_name = $request->input('holder_name');
+    $bank = $request->input('bank');
+    $branch = $request->input('branch');
+    $ifsc = $request->input('ifsc');
+
+    if (empty($user_id)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'User ID is empty',
+        ], 400);
+    }
+
+    if (empty($account_num)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Account number is empty',
+        ], 400);
+    }
+
+    if (empty($holder_name)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Holder name is empty',
+        ], 400);
+    }
+
+    if (empty($bank)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Bank is empty',
+        ], 400);
+    }
+
+    if (empty($branch)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Branch is empty',
+        ], 400);
+    }
+
+    if (empty($ifsc)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'IFSC is empty',
+        ], 400);
+    }
+
+    $user = Users::find($user_id);
+
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'User Not found',
+        ], 404);
+    }
+
+    if (!empty($user->account_num) || !empty($user->holder_name) || !empty($user->bank) || !empty($user->branch) || !empty($user->ifsc)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Bank details have already been updated and cannot be changed again.',
+        ], 400);
+    }
+
+    $user->update([
+        'account_num' => $account_num,
+        'holder_name' => $holder_name,
+        'bank' => $bank,
+        'branch' => $branch,
+        'ifsc' => $ifsc,
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Bank Details Updated Successfully',
+        'data' => $user,
+    ], 200);
+ }
 }

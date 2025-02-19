@@ -17,8 +17,8 @@
         
         <br>
         <!-- Copy Invitation Link -->
-        <button class="btn btn-primary d-block w-50 mb-2" onclick="copyInvitationLink()">
-            <?php echo e(__('Copy Invitation Link')); ?>
+        <button class="btn btn-primary d-block w-50 mb-2">
+            <?php echo e(__('Help Support')); ?>
 
         </button>
         

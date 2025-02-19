@@ -37,38 +37,33 @@
                 </li>
         
                 <li class="dash-item">
-                <a href="#" class="dash-link" id="levels-toggle">
-                    <span class="dash-micon"><i class="ti ti-building"></i></span>
-                    <span class="dash-mtext"><?php echo e(__('Levels')); ?></span>
-                </a>
-                <ul class="list-unstyled" id="levels-menu" style="display: none;">
-                    <li>
-                        <a href="<?php echo e(route('level_1.index')); ?>" class="dash-link">
-                            <span class="dash-micon"><i class="ti ti-users"></i></span>
-                            <span class="dash-mtext"><?php echo e(__('Level 1')); ?></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?php echo e(route('level_2.index')); ?>" class="dash-link">
-                            <span class="dash-micon"><i class="ti ti-users"></i></span>
-                            <span class="dash-mtext"><?php echo e(__('Level 2')); ?></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?php echo e(route('level_3.index')); ?>" class="dash-link">
-                            <span class="dash-micon"><i class="ti ti-users"></i></span>
-                            <span class="dash-mtext"><?php echo e(__('Level 3')); ?></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="<?php echo e(route('level_4.index')); ?>" class="dash-link">
-                            <span class="dash-micon"><i class="ti ti-users"></i></span>
-                            <span class="dash-mtext"><?php echo e(__('Level 4')); ?></span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-               
+                    <a href="#" class="dash-link" id="levels-toggle">
+                        <span class="dash-micon"><i class="ti ti-building"></i></span>
+                        <span class="dash-mtext"><?php echo e(__('Levels')); ?></span>
+                    </a>
+                    <ul class="list-unstyled" id="levels-menu" style="display: none; padding-left: 60px; list-style-type: disc;">
+                        <li>
+                            <a href="<?php echo e(route('level_1.index')); ?>" class="dash-link">
+                                <span class="dash-mtext"><?php echo e(__('Level 1')); ?></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('level_2.index')); ?>" class="dash-link">
+                                <span class="dash-mtext"><?php echo e(__('Level 2')); ?></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('level_3.index')); ?>" class="dash-link">
+                                <span class="dash-mtext"><?php echo e(__('Level 3')); ?></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo e(route('level_4.index')); ?>" class="dash-link">
+                                <span class="dash-mtext"><?php echo e(__('Level 4')); ?></span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="dash-item">
                     <a href="<?php echo e(route('works.index')); ?>" class="dash-link">
@@ -90,6 +85,16 @@
                         <span class="dash-mtext"><?php echo e(__('Invite Friends')); ?></span>
                     </a>
                 </li>
+
+                <li class="dash-item">
+                <a href="<?php echo e(route('bankdetails.update')); ?>" class="dash-link">
+                    <span class="dash-micon">
+                        <i class="ti ti-wallet"></i> <!-- Icon for withdrawals -->
+                    </span>
+                    <span class="dash-mtext"><?php echo e(__('Bank Details')); ?></span>
+                </a>
+                </li>
+
 
                 <li class="dash-item">
                 <a href="<?php echo e(route('transactions.index')); ?>" class="dash-link">

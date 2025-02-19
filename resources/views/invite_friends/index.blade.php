@@ -16,8 +16,8 @@
         
         <br>
         <!-- Copy Invitation Link -->
-        <button class="btn btn-primary d-block w-50 mb-2" onclick="copyInvitationLink()">
-            {{ __('Copy Invitation Link') }}
+        <button class="btn btn-primary d-block w-50 mb-2">
+            {{ __('Help Support') }}
         </button>
         
         <!-- Join Telegram Channel -->

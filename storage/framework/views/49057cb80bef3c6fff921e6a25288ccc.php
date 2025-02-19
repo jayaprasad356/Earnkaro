@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                             <div class="text-center mt-3">
-                            <a href="javascript:void(0);" class="btn btn-info" onclick="addToBalance('refer_income', <?php echo e($refer_income); ?>)">
+                            <a href="javascript:void(0);" class="btn btn-warning" onclick="addToBalance('refer_income', <?php echo e($refer_income); ?>)">
                                     <?php echo e(__('Add to Withdrawals')); ?>
 
                                 </a>
@@ -135,7 +135,7 @@
                                 </div>
                             </div>
                             <div class="text-center mt-3">
-                            <a href="javascript:void(0);" class="btn btn-info" onclick="addToBalance('whatsapp_status_income', <?php echo e($whatsapp_status_income); ?>)">
+                            <a href="javascript:void(0);" class="btn btn-danger" onclick="addToBalance('whatsapp_status_income', <?php echo e($whatsapp_status_income); ?>)">
                                     <?php echo e(__('Add to Withdrawals')); ?>
 
                                 </a>

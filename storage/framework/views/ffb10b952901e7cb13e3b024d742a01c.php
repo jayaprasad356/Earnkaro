@@ -46,7 +46,7 @@
                                 <th><?php echo e(__('Mobile')); ?></th>
                                 <th><?php echo e(__('Status')); ?></th>
                                 <th><?php echo e(__('Image')); ?></th>
-                                <th><?php echo e(__('Download')); ?></th>
+                                <!-- <th><?php echo e(__('Download')); ?></th> -->
                                 <th><?php echo e(__('DateTime')); ?></th>
                             </tr>
                         </thead>
@@ -82,14 +82,14 @@
                                                 style="max-width: 100px; max-height: 100px;">
                                         <?php endif; ?>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <a href="<?php echo e(asset($work->image ? 'storage/app/public/' . $work->image : 'storage/default.jpg')); ?>" 
                                            download="work_image_<?php echo e($work->id); ?>.jpg" 
                                            class="btn btn-primary btn-sm">
                                             <?php echo e(__('Download Image')); ?>
 
                                         </a>
-                                    </td>
+                                    </td> -->
                                     <td><?php echo e($work['datetime'] ?? 'N/A'); ?></td>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -59,9 +59,26 @@ unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <div class="form-group">
-                        <label for="city"><?php echo e(__('City')); ?></label>
-                        <input type="text" class="form-control" id="city" name="city" required value="<?php echo e(old('city')); ?>">
-                        <?php $__errorArgs = ['city'];
+                        <label for="pincode"><?php echo e(__('Pincode')); ?></label>
+                        <input type="text" class="form-control" id="pincode" name="pincode" required value="<?php echo e(old('pincode')); ?>">
+                        <?php $__errorArgs = ['pincode'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <span class="text-danger"><?php echo e($message); ?></span> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender"><?php echo e(__('Gender')); ?></label>
+                        <select class="form-control" id="gender" name="gender" required>
+                            <option value=""><?php echo e(__('Select Gender')); ?></option>
+                            <option value="male" <?php echo e(old('gender') == 'male' ? 'selected' : ''); ?>><?php echo e(__('male')); ?></option>
+                            <option value="female" <?php echo e(old('gender') == 'female' ? 'selected' : ''); ?>><?php echo e(__('female')); ?></option>
+                        </select>
+                        <?php $__errorArgs = ['gender'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }

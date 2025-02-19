@@ -44,7 +44,7 @@
                                 <th>{{ __('Mobile') }}</th>
                                 <th>{{ __('Status') }}</th>
                                 <th>{{ __('Image') }}</th>
-                                <th>{{ __('Download') }}</th>
+                                <!-- <th>{{ __('Download') }}</th> -->
                                 <th>{{ __('DateTime') }}</th>
                             </tr>
                         </thead>
@@ -80,13 +80,13 @@
                                                 style="max-width: 100px; max-height: 100px;">
                                         @endif
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <a href="{{ asset($work->image ? 'storage/app/public/' . $work->image : 'storage/default.jpg') }}" 
                                            download="work_image_{{ $work->id }}.jpg" 
                                            class="btn btn-primary btn-sm">
                                             {{ __('Download Image') }}
                                         </a>
-                                    </td>
+                                    </td> -->
                                     <td>{{ $work['datetime'] ?? 'N/A' }}</td>
                                 </tr>
                             @endforeach
