@@ -82,9 +82,10 @@ class AuthController extends Controller
         $users = DB::table('users')
         ->where($column, $refer_code)
         ->where('status', 0)
-        ->orderBy('id', 'desc')
+        ->orderBy('registered_datetime', 'desc') // Order by registered_datetime in descending order
         ->select('*', DB::raw("DATE(registered_datetime) AS registered_date"))
         ->get();
+    
     
     
         if ($users->isEmpty()) {

@@ -5,7 +5,7 @@
 @section('content')
     <div class="card-body">
         <div class="text-center mb-4">
-            <img src="{{ asset('storage/uploads/logo/jiyo.jpeg') }}" alt="Logo" width="100">
+            <img src="{{ asset('storage/uploads/logo/greenkaro.png') }}" alt="Logo" width="100">
         </div>
 
         <div>
