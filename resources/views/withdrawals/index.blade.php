@@ -17,22 +17,9 @@
                 <!-- Filter by Type Form -->
                 <form action="{{ route('withdrawals.index') }}" method="GET" class="mb-3">
                     <div class="row align-items-end">
-                        <!-- Existing Status Filter -->
-                        <div class="col-md-3">
-                            <label for="status">{{ __('Filter by Status') }}</label>
-                            <select name="status" id="status" class="form-control status-filter" onchange="this.form.submit()">
-                                <option value="">{{ __('All') }}</option>
-                                <option value="0" {{ request()->get('status') == '0' ? 'selected' : '' }}>{{ __('Pending') }}</option>
-                                <option value="1" {{ request()->get('status') == '1' ? 'selected' : '' }}>{{ __('Paid') }}</option>
-                                <option value="2" {{ request()->get('status') == '2' ? 'selected' : '' }}>{{ __('Cancelled') }}</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="filter_date">{{ __('Filter by Date') }}</label>
-                            <input type="date" name="filter_date" id="filter_date" class="form-control" value="{{ request()->get('filter_date') }}" onchange="this.form.submit()">
-                        </div>
+          
 
-                        <div class="col-md-3 offset-md-3 d-flex justify-content-end">
+                        <div class="col-md offset-md-3 d-flex justify-content-end">
                         <a href="{{ route('withdrawals.show') }}" class="btn btn-primary">
                                 {{ __('Withdrawal Request') }}
                             </a>
@@ -47,11 +34,8 @@
                         <table class="table" id="pc-dt-simple">
                             <thead>
                                 <tr>
-                                    <th>{{ __('ID') }}</th>
-                                    <th>{{ __('Name') }}</th>
-                                    <th>{{ __('Mobile') }}</th>
+                                    
                                     <th>{{ __('Amount') }}</th>
-                                    <th>{{ __('Type') }}</th>
                                     <th>{{ __('Status') }}</th>
                                     <th>{{ __('Bank') }}</th>
                                     <th>{{ __('Branch') }}</th>
@@ -64,11 +48,8 @@
                             <tbody>
                                 @foreach ($withdrawals as $withdrawal)
                                     <tr>
-                                        <td>{{ $withdrawal->id }}</td>
-                                        <td>{{ ucfirst($withdrawal->users->name ?? '') }}</td>
-                                        <td>{{ $withdrawal->users->mobile ?? '' }}</td>
+                                       
                                         <td>{{ $withdrawal->amount }}</td>
-                                        <td>{{ $withdrawal->type }}</td>
                                         <td>
                                             @if($withdrawal->status == 0)
                                                 <i class="fa fa-clock text-warning"></i> <span class="font-weight-bold">{{ __('Pending') }}</span>

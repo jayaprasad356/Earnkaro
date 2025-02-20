@@ -83,9 +83,8 @@ class AuthController extends Controller
         ->where($column, $refer_code)
         ->where('status', 1)
         ->orderBy('registered_datetime', 'desc') // Order by registered_datetime in descending order
-        ->select('*', DB::raw("DATE(registered_datetime) AS registered_date"))
+        ->select('*', DB::raw("DATE(registered_datetime) AS registered_date"), DB::raw("CONCAT(SUBSTRING(mobile, 1, 2), '******', SUBSTRING(mobile, LENGTH(mobile)-1, 2)) AS mobile"))
         ->get();
-    
     
     
         if ($users->isEmpty()) {
@@ -199,7 +198,7 @@ class AuthController extends Controller
     $refer_code = 'GK' . str_pad($user->id, 2, '0', STR_PAD_LEFT);
     $user->refer_code = $refer_code;
     $user->save();
-    
+
     return response()->json([
         'success' => true,
         'message' => 'User registered successfully',

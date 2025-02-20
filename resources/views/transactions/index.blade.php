@@ -17,21 +17,7 @@
                 <!-- Filter by Type Form -->
                 <form action="{{ route('transactions.index') }}" method="GET" class="mb-3" id="filterForm">
                     <div class="row align-items-end">
-                        <div class="col-md-3">
-                            <label for="type">{{ __('Filter by Type') }}</label>
-                            <select name="type" id="type" class="form-control" onchange="document.getElementById('filterForm').submit();">
-                                <option value="">{{ __('All') }}</option>
-                                @foreach ($types as $type)
-                                    <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
-                                        {{ ucfirst($type) }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="filter_date">{{ __('Filter by Date') }}</label>
-                            <input type="date" name="filter_date" id="filter_date" class="form-control" value="{{ request()->get('filter_date') }}" onchange="this.form.submit()">
-                        </div>
+                       
                     </div>
                 </form>
 

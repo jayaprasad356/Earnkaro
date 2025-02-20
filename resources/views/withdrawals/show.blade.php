@@ -33,52 +33,14 @@
             <!-- Enter Amount -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="amount" class="form-label text-primary fw-bold">{{ __('Enter Amount') }}</label>
+                    <label for="amount" class="form-label text-primary fw-bold"> {{ __('Enter Amount') }} (Minimum: ₹{{ $minimum_withdrawals }})</label>
                     <input type="number" class="form-control border-2 border-warning bg-light shadow-lg text-dark fw-bold" 
                         id="amount" name="amount" required placeholder="Enter amount">
                 </div>
             </div>
 
 
-            <!-- Holder Name -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="holder_name" class="form-label">{{ __('Holder Name') }}</label>
-                    <input type="text" class="form-control" id="holder_name" name="holder_name" value="{{ ($holder_name) }}" required>
-                </div>
-            </div>
-
-            <!-- Account Number -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="account_number" class="form-label">{{ __('Account Number') }}</label>
-                    <input type="text" class="form-control" id="account_number" name="account_number" value="{{ ($account_num) }}" required>
-                </div>
-            </div>
-
-            <!-- Bank -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="bank" class="form-label">{{ __('Bank') }}</label>
-                    <input type="text" class="form-control" id="bank" name="bank" value="{{ ($bank) }}" required>
-                </div>
-            </div>
-
-            <!-- Branch -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="branch" class="form-label">{{ __('Branch') }}</label>
-                    <input type="text" class="form-control" id="branch" name="branch" value="{{ ($branch) }}" required>
-                </div>
-            </div>
-
-            <!-- IFSC Code -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="ifsc" class="form-label">{{ __('IFSC Code') }}</label>
-                    <input type="text" class="form-control" id="ifsc" name="ifsc" value="{{ ($ifsc) }}" required>
-                </div>
-            </div>
+           
         </div>
 
         <!-- Submit Button -->
@@ -97,12 +59,7 @@
     document.getElementById('submitWithdrawalRequest').addEventListener('click', function() {
         // Get the withdrawal details from the form
         let amount = document.getElementById('amount').value;
-        let holderName = document.getElementById('holder_name').value;
-        let accountNumber = document.getElementById('account_number').value;
-        let bank = document.getElementById('bank').value;
-        let branch = document.getElementById('branch').value;
-        let ifsc = document.getElementById('ifsc').value;
-        let userId = '{{ session("user_id") }}'; // Get user_id from session
+      
 
         // Send the withdrawal request
         fetch('{{ route("withdrawals.submit") }}', {
@@ -112,13 +69,9 @@
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             body: JSON.stringify({
-                user_id: userId,
+         
                 amount: amount,
-                holder_name: holderName,
-                account_number: accountNumber,
-                bank: bank,
-                branch: branch,
-                ifsc: ifsc
+            
             })
         })
         .then(response => response.json())

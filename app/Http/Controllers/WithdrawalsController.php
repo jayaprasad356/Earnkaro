@@ -44,27 +44,31 @@ class WithdrawalsController extends Controller
     public function show()
     {
         $user_id = session()->get('user_id');
-        
+    
         if (!$user_id) {
             return redirect()->route('dashboard')->with('error', 'Unauthorized access.');
         }
-        
+    
         // Fetch the user from the database
         $user = Users::find($user_id);
+    
         // Get the bank details from the user record
         $earningWallet = $user->earning_wallet ?? 0;
         $bonusWallet = $user->bonus_wallet ?? 0;
         $balance = $user->balance ?? 0;
-        $bank = $user->bank ?? ''; // Fetching bank details
-        $branch = $user->branch ?? '';
-        $ifsc = $user->ifsc ?? '';
-        $account_num = $user->account_num ?? '';
-        $holder_name = $user->holder_name ?? '';
-        
+    
+        // Fetch minimum withdrawal amount from the latest news record
+        $news = \App\Models\News::latest()->first();
+        $minimum_withdrawals = $news->minimum_withdrawals ?? ''; // Default to 100 if not set
+    
         // Pass data to the view
-        return view('withdrawals.show', compact('earningWallet', 'bonusWallet', 'balance', 'bank', 'branch', 'ifsc', 'account_num', 'holder_name'));
+        return view('withdrawals.show', compact(
+            'earningWallet', 'bonusWallet', 'balance', 
+             'minimum_withdrawals'
+        ));
     }
     
+       
    
     public function submitWithdrawal(Request $request)
     {
@@ -78,30 +82,8 @@ class WithdrawalsController extends Controller
             ], 403); // Unauthorized access
         }
     
-        // Check if current time is between 10:00 AM and 6:00 PM
-        if (!$this->isBetween10AMand6PM()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Withdrawal time is between 10:00 AM and 6:00 PM.',
-            ], 400); // Time restriction
-        }
-    
-        // Check if today is a weekend (Sunday or Saturday)
-        $dayOfWeek = date('w'); // 0 = Sunday, 6 = Saturday
-        if ($dayOfWeek == 0 || $dayOfWeek == 7) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Withdrawals are allowed only from Monday to Saturday.',
-            ], 400); // Day restriction
-        }
-    
         // Get the withdrawal details from the request
         $amount = $request->input('amount');
-        $holderName = $request->input('holder_name');
-        $accountNumber = $request->input('account_number');
-        $bank = $request->input('bank');
-        $branch = $request->input('branch');
-        $ifsc = $request->input('ifsc');
     
         // Retrieve user details
         $user = Users::find($user_id);
@@ -112,13 +94,28 @@ class WithdrawalsController extends Controller
                 'message' => 'User not found.',
             ], 404); // User not found
         }
+
+          // Check current day and time
+            $currentDay = now()->format('l'); // Get the current day (e.g., Monday, Tuesday)
+            $currentTime = now()->format('H:i'); // Get the current time in 24-hour format
+
+            // Allowed days and time range
+            $allowedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            $startTime = '10:00';
+            $endTime = '18:00';
+
+            if (!in_array($currentDay, $allowedDays) || $currentTime < $startTime || $currentTime > $endTime) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Withdrawals are only allowed from Monday to Saturday between 10:00 AM and 6:00 PM.',
+                ], 400);
+            }
     
-        // Check if withdrawal is disabled for this user
-        if ($user->withdrawal_status == 0) {
+        if (!$user->holder_name || !$user->account_num || !$user->bank || !$user->branch || !$user->ifsc) {
             return response()->json([
                 'success' => false,
-                'message' => 'Withdrawals are disabled for your account.',
-            ], 400); // Withdrawal disabled
+                'message' => 'Bank details are missing. Please update them before withdrawing.',
+            ], 400);
         }
     
         // Check for pending withdrawals
@@ -145,7 +142,7 @@ class WithdrawalsController extends Controller
         }
 
         // Use the min_withdrawal from the "news" table
-        $minimum_withdrawal = $news->minimum_withdrawal;
+        $minimum_withdrawals = $news->minimum_withdrawals;
 
 
         // Validate amount
@@ -153,6 +150,14 @@ class WithdrawalsController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid withdrawal amount.',
+            ], 400);
+        }
+
+
+        if ($amount < $minimum_withdrawals) {
+            return response()->json([
+                'success' => false,
+                'message' => "Minimum withdrawal amount is $minimum_withdrawals.",
             ], 400);
         }
     
@@ -180,14 +185,6 @@ class WithdrawalsController extends Controller
             $user->balance -= $amount;
             $user->save();
     
-            // Update or Insert Bank Details into the users table
-            $user->update([
-                'holder_name' => $holderName,
-                'account_number' => $accountNumber,
-                'bank' => $bank,
-                'branch' => $branch,
-                'ifsc' => $ifsc,
-            ]);
     
             DB::commit();
     
@@ -205,14 +202,6 @@ class WithdrawalsController extends Controller
         }
     }
     
-    // Helper function to check if current time is between 10:00 AM and 6:00 PM
-    private function isBetween10AMand6PM() {
-        $currentHour = date('H');
-        $startTimestamp = strtotime('10:00:00');
-        $endTimestamp = strtotime('18:00:00');
-        return ($currentHour >= date('H', $startTimestamp)) && ($currentHour < date('H', $endTimestamp));
-    }
-    
-
+  
     
 }

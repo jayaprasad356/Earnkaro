@@ -18,22 +18,9 @@
                 <!-- Filter by Type Form -->
                 <form action="<?php echo e(route('withdrawals.index')); ?>" method="GET" class="mb-3">
                     <div class="row align-items-end">
-                        <!-- Existing Status Filter -->
-                        <div class="col-md-3">
-                            <label for="status"><?php echo e(__('Filter by Status')); ?></label>
-                            <select name="status" id="status" class="form-control status-filter" onchange="this.form.submit()">
-                                <option value=""><?php echo e(__('All')); ?></option>
-                                <option value="0" <?php echo e(request()->get('status') == '0' ? 'selected' : ''); ?>><?php echo e(__('Pending')); ?></option>
-                                <option value="1" <?php echo e(request()->get('status') == '1' ? 'selected' : ''); ?>><?php echo e(__('Paid')); ?></option>
-                                <option value="2" <?php echo e(request()->get('status') == '2' ? 'selected' : ''); ?>><?php echo e(__('Cancelled')); ?></option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="filter_date"><?php echo e(__('Filter by Date')); ?></label>
-                            <input type="date" name="filter_date" id="filter_date" class="form-control" value="<?php echo e(request()->get('filter_date')); ?>" onchange="this.form.submit()">
-                        </div>
+          
 
-                        <div class="col-md-3 offset-md-3 d-flex justify-content-end">
+                        <div class="col-md offset-md-3 d-flex justify-content-end">
                         <a href="<?php echo e(route('withdrawals.show')); ?>" class="btn btn-primary">
                                 <?php echo e(__('Withdrawal Request')); ?>
 
@@ -49,11 +36,8 @@
                         <table class="table" id="pc-dt-simple">
                             <thead>
                                 <tr>
-                                    <th><?php echo e(__('ID')); ?></th>
-                                    <th><?php echo e(__('Name')); ?></th>
-                                    <th><?php echo e(__('Mobile')); ?></th>
+                                    
                                     <th><?php echo e(__('Amount')); ?></th>
-                                    <th><?php echo e(__('Type')); ?></th>
                                     <th><?php echo e(__('Status')); ?></th>
                                     <th><?php echo e(__('Bank')); ?></th>
                                     <th><?php echo e(__('Branch')); ?></th>
@@ -66,11 +50,8 @@
                             <tbody>
                                 <?php $__currentLoopData = $withdrawals; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $withdrawal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td><?php echo e($withdrawal->id); ?></td>
-                                        <td><?php echo e(ucfirst($withdrawal->users->name ?? '')); ?></td>
-                                        <td><?php echo e($withdrawal->users->mobile ?? ''); ?></td>
+                                       
                                         <td><?php echo e($withdrawal->amount); ?></td>
-                                        <td><?php echo e($withdrawal->type); ?></td>
                                         <td>
                                             <?php if($withdrawal->status == 0): ?>
                                                 <i class="fa fa-clock text-warning"></i> <span class="font-weight-bold"><?php echo e(__('Pending')); ?></span>

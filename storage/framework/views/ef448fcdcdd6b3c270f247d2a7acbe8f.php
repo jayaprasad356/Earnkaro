@@ -34,52 +34,14 @@
             <!-- Enter Amount -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="amount" class="form-label text-primary fw-bold"><?php echo e(__('Enter Amount')); ?></label>
+                    <label for="amount" class="form-label text-primary fw-bold"> <?php echo e(__('Enter Amount')); ?> (Minimum: ₹<?php echo e($minimum_withdrawals); ?>)</label>
                     <input type="number" class="form-control border-2 border-warning bg-light shadow-lg text-dark fw-bold" 
                         id="amount" name="amount" required placeholder="Enter amount">
                 </div>
             </div>
 
 
-            <!-- Holder Name -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="holder_name" class="form-label"><?php echo e(__('Holder Name')); ?></label>
-                    <input type="text" class="form-control" id="holder_name" name="holder_name" value="<?php echo e(($holder_name)); ?>" required>
-                </div>
-            </div>
-
-            <!-- Account Number -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="account_number" class="form-label"><?php echo e(__('Account Number')); ?></label>
-                    <input type="text" class="form-control" id="account_number" name="account_number" value="<?php echo e(($account_num)); ?>" required>
-                </div>
-            </div>
-
-            <!-- Bank -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="bank" class="form-label"><?php echo e(__('Bank')); ?></label>
-                    <input type="text" class="form-control" id="bank" name="bank" value="<?php echo e(($bank)); ?>" required>
-                </div>
-            </div>
-
-            <!-- Branch -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="branch" class="form-label"><?php echo e(__('Branch')); ?></label>
-                    <input type="text" class="form-control" id="branch" name="branch" value="<?php echo e(($branch)); ?>" required>
-                </div>
-            </div>
-
-            <!-- IFSC Code -->
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="ifsc" class="form-label"><?php echo e(__('IFSC Code')); ?></label>
-                    <input type="text" class="form-control" id="ifsc" name="ifsc" value="<?php echo e(($ifsc)); ?>" required>
-                </div>
-            </div>
+           
         </div>
 
         <!-- Submit Button -->
@@ -98,12 +60,7 @@
     document.getElementById('submitWithdrawalRequest').addEventListener('click', function() {
         // Get the withdrawal details from the form
         let amount = document.getElementById('amount').value;
-        let holderName = document.getElementById('holder_name').value;
-        let accountNumber = document.getElementById('account_number').value;
-        let bank = document.getElementById('bank').value;
-        let branch = document.getElementById('branch').value;
-        let ifsc = document.getElementById('ifsc').value;
-        let userId = '<?php echo e(session("user_id")); ?>'; // Get user_id from session
+      
 
         // Send the withdrawal request
         fetch('<?php echo e(route("withdrawals.submit")); ?>', {
@@ -113,13 +70,9 @@
                 'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
             },
             body: JSON.stringify({
-                user_id: userId,
+         
                 amount: amount,
-                holder_name: holderName,
-                account_number: accountNumber,
-                bank: bank,
-                branch: branch,
-                ifsc: ifsc
+            
             })
         })
         .then(response => response.json())
