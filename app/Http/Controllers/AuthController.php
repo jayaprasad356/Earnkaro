@@ -196,9 +196,10 @@ class AuthController extends Controller
     $user->save();
 
     // Generate refer code
-    // $refer_code = 'PL' . str_pad($user->id, 2, '0', STR_PAD_LEFT);
-    // $user->refer_code = $refer_code;
-    // $user->save();
+    $refer_code = 'GK' . str_pad($user->id, 2, '0', STR_PAD_LEFT);
+    $user->refer_code = $refer_code;
+    $user->save();
+    
     return response()->json([
         'success' => true,
         'message' => 'User registered successfully',

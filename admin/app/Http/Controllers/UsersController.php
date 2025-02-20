@@ -55,13 +55,12 @@ class UsersController extends Controller
         $user->pincode = $request->pincode;
         $user->gender = $request->gender; 
         $user->refer_code = $request->refer_code;
-        $user->referred_by = $request->referred_by; 
-        $user->c_referred_by = $request->c_referred_by; 
-        $user->d_referred_by = $request->d_referred_by;
-        $user->e_referred_by = $request->e_referred_by;
+        $user->level_1_refer = $request->level_1_refer; 
+        $user->level_2_refer = $request->level_2_refer; 
+        $user->level_3_refer = $request->level_3_refer;
+        $user->level_4_refer = $request->level_4_refer;
         $user->balance = $request->balance; 
         $user->recharge = $request->recharge; 
-        $user->blocked = $request->blocked; 
         $user->updated_at = now();
         $user->save();
 

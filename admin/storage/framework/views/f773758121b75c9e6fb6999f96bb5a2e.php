@@ -9,12 +9,12 @@
     <div class="card-body">
         <!-- Logo Section -->
         <div class="text-center mb-4">
-            <img src="<?php echo e(asset('storage/uploads/logo/jiyo.jpeg')); ?>" alt="Logo" width="100">
+            <img src="<?php echo e(asset('storage/uploads/logo/greenkaro.png')); ?>" alt="Logo" width="100">
         </div>
 
         <!-- Login Title -->
         <div>
-           <center><h2 class="mb-3 f-w-600"><?php echo e(__('Earnkaro Admin - Login page')); ?></h2></center> 
+           <center><h2 class="mb-3 f-w-600"><?php echo e(__('Greenkaro Admin - Login page')); ?></h2></center> 
         </div>
 
         <!-- Login Form -->

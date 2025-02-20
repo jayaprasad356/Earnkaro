@@ -22,7 +22,7 @@
     <div class="m-header main-logo">
         <a href="<?php echo e(route('dashboard')); ?>" class="b-brand">
             <!-- ========   change your logo hear   ============ -->
-            <img src="<?php echo e(asset('storage/uploads/logo/jiyo.jpeg')); ?>" alt="Logo"
+            <img src="<?php echo e(asset('storage/uploads/logo/greenkaro.png')); ?>" alt="Logo"
                 alt="<?php echo e(config('app.name', 'HRMGo')); ?>" class="logo logo-lg" style="height: 50px;">
         </a>
     </div>

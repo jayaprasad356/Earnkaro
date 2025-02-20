@@ -41,13 +41,12 @@
                                 <th>{{ __('Gender') }}</th>
                                 <th>{{ __('Balance') }}</th>
                                 <th>{{ __('Refer Code') }}</th>
-                                <th>{{ __('Referred By') }}</th>
-                                <th>{{ __('C Referred By') }}</th>
-                                <th>{{ __('D Referred By') }}</th>
-                                <th>{{ __('E Referred By') }}</th>
+                                <th>{{ __('Level 1 refer') }}</th>
+                                <th>{{ __('Level 2 refer') }}</th>
+                                <th>{{ __('Level 3 refer') }}</th>
+                                <th>{{ __('Level 1 refer4') }}</th>
                                 <th>{{ __('Registered DateTime') }}</th>
                                 <th>{{ __('Status') }}</th>
-                                <th>{{ __('Blocked') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,10 +78,10 @@
                                     <td>{{ ucfirst($user->gender) }}</td>
                                     <td>{{ $user->balance }}</td>
                                     <td>{{ $user->refer_code }}</td>
-                                    <td>{{ $user->referred_by }}</td>
-                                    <td>{{ $user->c_referred_by }}</td>
-                                    <td>{{ $user->d_referred_by }}</td>
-                                    <td>{{ $user->e_referred_by }}</td>
+                                    <td>{{ $user->level_1_refer }}</td>
+                                    <td>{{ $user->level_2_refer }}</td>
+                                    <td>{{ $user->level_3_refer }}</td>
+                                    <td>{{ $user->level_4_refer }}</td>
                                     <td>{{ $user->registered_datetime }}</td>
                                     <td>
                                         <!-- Display Status with values 0, 1, and 2 -->
@@ -97,14 +96,6 @@
                                         @endif
                                     </td>
                               
-                                    <td>
-                                        <!-- Display Blocked Status -->
-                                        @if($user->blocked == 1)
-                                            <i class="fa fa-ban text-danger"></i> <span class="font-weight-bold">{{ __('Blocked') }}</span>
-                                        @else
-                                            <i class="fa fa-check text-success"></i> <span class="font-weight-bold">{{ __('Not Blocked') }}</span>
-                                        @endif
-                                    </td>
                                     <!-- Avatar Image -->
                                     <!-- Actions -->
                                 </tr>

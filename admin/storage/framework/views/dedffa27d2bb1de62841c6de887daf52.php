@@ -21,12 +21,12 @@
                             <label for="filter_date"><?php echo e(__('Filter by Date')); ?></label>
                             <input type="date" name="filter_date" id="filter_date" class="form-control" value="<?php echo e(request()->get('filter_date')); ?>" onchange="this.form.submit()">
                  </div>
-                 <div class="col-md-3 ms-auto">
+                 <!-- <div class="col-md-3 ms-auto">
                             <label for="search"><?php echo e(__('Search All Users')); ?></label>
                             <input type="text" name="search" id="search" class="form-control"
                              value="<?php echo e(request()->get('search')); ?>" placeholder="Enter Name, Mobile">
                         </div>
-                 </div>
+                 </div> -->
         </form>
             </div>
             <div class="card-body table-border-style">
@@ -40,16 +40,14 @@
                                 <th><?php echo e(__('Mobile')); ?></th>
                                 <th><?php echo e(__('Age')); ?></th>
                                 <th><?php echo e(__('Gender')); ?></th>
-                                <th><?php echo e(__('Email')); ?></th>
                                 <th><?php echo e(__('Balance')); ?></th>
                                 <th><?php echo e(__('Refer Code')); ?></th>
-                                <th><?php echo e(__('Referred By')); ?></th>
-                                <th><?php echo e(__('C Referred By')); ?></th>
-                                <th><?php echo e(__('D Referred By')); ?></th>
-                                <th><?php echo e(__('E Referred By')); ?></th>
+                                <th><?php echo e(__('Level 1 refer')); ?></th>
+                                <th><?php echo e(__('Level 2 refer')); ?></th>
+                                <th><?php echo e(__('Level 3 refer')); ?></th>
+                                <th><?php echo e(__('Level 1 refer4')); ?></th>
                                 <th><?php echo e(__('Registered DateTime')); ?></th>
                                 <th><?php echo e(__('Status')); ?></th>
-                                <th><?php echo e(__('Blocked')); ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,13 +77,12 @@
                                     <td><?php echo e($user->mobile); ?></td>
                                     <td><?php echo e($user->age); ?></td>
                                     <td><?php echo e(ucfirst($user->gender)); ?></td>
-                                    <td><?php echo e($user->email); ?></td>
                                     <td><?php echo e($user->balance); ?></td>
                                     <td><?php echo e($user->refer_code); ?></td>
-                                    <td><?php echo e($user->referred_by); ?></td>
-                                    <td><?php echo e($user->c_referred_by); ?></td>
-                                    <td><?php echo e($user->d_referred_by); ?></td>
-                                    <td><?php echo e($user->e_referred_by); ?></td>
+                                    <td><?php echo e($user->level_1_refer); ?></td>
+                                    <td><?php echo e($user->level_2_refer); ?></td>
+                                    <td><?php echo e($user->level_3_refer); ?></td>
+                                    <td><?php echo e($user->level_4_refer); ?></td>
                                     <td><?php echo e($user->registered_datetime); ?></td>
                                     <td>
                                         <!-- Display Status with values 0, 1, and 2 -->
@@ -100,14 +97,6 @@
                                         <?php endif; ?>
                                     </td>
                               
-                                    <td>
-                                        <!-- Display Blocked Status -->
-                                        <?php if($user->blocked == 1): ?>
-                                            <i class="fa fa-ban text-danger"></i> <span class="font-weight-bold"><?php echo e(__('Blocked')); ?></span>
-                                        <?php else: ?>
-                                            <i class="fa fa-check text-success"></i> <span class="font-weight-bold"><?php echo e(__('Not Blocked')); ?></span>
-                                        <?php endif; ?>
-                                    </td>
                                     <!-- Avatar Image -->
                                     <!-- Actions -->
                                 </tr>

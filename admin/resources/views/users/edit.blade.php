@@ -141,23 +141,23 @@
                         </div>
 
                         <div class="form-group col-md-6">
-                            {{ Form::label('Referred By', __('Referred By'), ['class' => 'form-label']) }}
-                            {{ Form::text('referred_by', null, ['class' => 'form-control']) }}
+                            {{ Form::label('Level 1 Refer', __('Level 1 Refer'), ['class' => 'form-label']) }}
+                            {{ Form::text('level_1_refer', null, ['class' => 'form-control']) }}
                         </div>
 
                         <div class="form-group col-md-6">
-                            {{ Form::label('C Referred By', __('C Referred By'), ['class' => 'form-label']) }}
-                            {{ Form::text('c_referred_by', null, ['class' => 'form-control']) }}
+                            {{ Form::label('Level 2 Refer', __('Level 2 Refer'), ['class' => 'form-label']) }}
+                            {{ Form::text('level_2_refer', null, ['class' => 'form-control']) }}
                         </div>
 
                         <div class="form-group col-md-6">
-                            {{ Form::label('D Referred By', __('D Referred By'), ['class' => 'form-label']) }}
-                            {{ Form::text('d_referred_by', null, ['class' => 'form-control']) }}
+                            {{ Form::label('Level 3 Refer', __('Level 3 Refer'), ['class' => 'form-label']) }}
+                            {{ Form::text('level_3_refer', null, ['class' => 'form-control']) }}
                         </div>
 
                         <div class="form-group col-md-6">
-                            {{ Form::label('E Referred By', __('E Referred By'), ['class' => 'form-label']) }}
-                            {{ Form::text('e_referred_by', null, ['class' => 'form-control']) }}
+                            {{ Form::label('Level 4 Refer', __('Level 4 Refer'), ['class' => 'form-label']) }}
+                            {{ Form::text('level_4_refer', null, ['class' => 'form-control']) }}
                         </div>
 
                         <div class="form-group col-md-6">
@@ -175,16 +175,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-md-6">
-                            {{ Form::label('blocked', __('Blocked'), ['class' => 'form-label']) }}
-                            <div class="switch-container">
-                                <div class="switch">
-                                    <input type="hidden" name="blocked" value="0">
-                                    <input type="checkbox" id="blocked" name="blocked" value="1" {{ $user->blocked == 1 ? 'checked' : '' }}>
-                                    <label for="blocked"></label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
