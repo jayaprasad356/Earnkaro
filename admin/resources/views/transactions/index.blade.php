@@ -44,7 +44,6 @@
                                     <th>{{ __('Name') }}</th>
                                     <th>{{ __('Mobile') }}</th>
                                     <th>{{ __('Type') }}</th>
-                                    <th>{{ __('Coins') }}</th>
                                     <th>{{ __('Amount') }}</th>
                                     <th>{{ __('Payment Type') }}</th>
                                     <th>{{ __('Datetime') }}</th>
@@ -57,7 +56,6 @@
                                         <td>{{ ucfirst($transaction->users->name ?? '') }}</td>
                                         <td>{{ $transaction->users->mobile ?? '' }}</td>
                                         <td>{{ $transaction->type }}</td>
-                                        <td>{{ $transaction->coins }}</td>
                                         <td>{{ $transaction->amount }}</td>
                                         <td>{{ $transaction->payment_type }}</td>
                                         <td>{{ $transaction->datetime }}</td>
