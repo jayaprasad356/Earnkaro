@@ -19,11 +19,19 @@ class NewsController extends Controller
             'customer_support_number' => 'required|string',
             'minimum_withdrawals' => 'required|string',
             'whatsapp_status_income' => 'required|string',
+            'download_today_image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
-        $news = News::findOrFail(1); // Editing record with ID 1
-        $news->update($request->only(['telegram_link', 'customer_support_number','minimum_withdrawals','whatsapp_status_income']));
-
+    
+        $news = News::findOrFail(1);
+    
+        if ($request->hasFile('download_today_image')) {
+            $imagePath = $request->file('download_today_image')->store('news', 'public');
+            $news->download_today_image = $imagePath;
+        }
+    
+        $news->update($request->except(['download_today_image']));
+    
         return redirect()->route('news.edit')->with('success', 'Settings updated successfully.');
     }
+    
 }

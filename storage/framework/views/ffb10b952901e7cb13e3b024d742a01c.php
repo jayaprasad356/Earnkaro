@@ -1,5 +1,6 @@
 
 
+
 <?php $__env->startSection('page-title'); ?>
     <?php echo e(__('Works List')); ?>
 
@@ -14,14 +15,15 @@
 <div class="row">
     <div class="col-xl-12">
               <!-- Default Image Download Button -->
-              <div class="mb-3">
-            <a href="<?php echo e(asset('storage/uploads/logo/jiyo.jpeg')); ?>" 
-               download="default_image.jpg" 
-               class="btn btn-primary btn-sm">
-                <i class="fa fa-download"></i> <?php echo e(__('Download Default Image')); ?>
+              <?php if($news && $news->download_today_image): ?>
+                <div class="mb-3">
+                    <a href="<?php echo e(asset('admin/storage/app/public/' . $news->download_today_image)); ?>" download="news_image_<?php echo e($news->id); ?>.jpg">
+                        <i class="fa fa-download"></i> <?php echo e(__('Download Default Image')); ?>
 
-            </a>
-        </div>
+                    </a>
+                </div>
+            <?php endif; ?>
+
          <form action="<?php echo e(route('works.upload')); ?>" method="POST" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
                     <div class="form-group">

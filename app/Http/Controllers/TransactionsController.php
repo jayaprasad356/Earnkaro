@@ -9,17 +9,24 @@ class TransactionsController extends Controller
 {
     public function index(Request $request)
     {
-        // Get distinct types for the dropdown
-        $types = Transactions::select('type')->distinct()->pluck('type');
-        $filterDate = $request->get('filter_date');
+        // Get the user ID from session
+        $userId = session('user_id');
     
-        // Fetch transactions and apply the filter
+        if (!$userId) {
+            return back()->with('error', 'User not found. Please log in again.');
+        }
+    
+        // Get distinct transaction types for the dropdown
+        $types = Transactions::where('user_id', $userId)->select('type')->distinct()->pluck('type');
+    
+        // Apply filters based on session user_id and selected filters
         $transactions = Transactions::with('users') // Ensure user relation is loaded
-        ->when($filterDate, function ($query) use ($filterDate) {
-            return $query->whereDate('datetime', $filterDate); // Make sure column name matches
-        })
+            ->where('user_id', $userId) // Filter by session user ID
+            ->when($request->get('filter_date'), function ($query, $filterDate) {
+                return $query->whereDate('datetime', $filterDate); // Filter by date
+            })
             ->when($request->input('type'), function ($query, $type) {
-                $query->where('type', $type); // Apply the type filter
+                return $query->where('type', $type); // Filter by type
             })
             ->orderBy('datetime', 'desc') // Order by latest data
             ->get();

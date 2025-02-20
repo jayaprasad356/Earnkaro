@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Works;
+use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,7 +14,8 @@ class WorksController extends Controller
     {
         $works = Works::all(); // Fetch works data
         $works = Works::with('user')->get();
-        return view('works.index', compact('works'));
+        $news = News::latest()->first(); // Fetch the latest news record
+        return view('works.index', compact('works', 'news'));
     }
 
     // Handle Image Upload

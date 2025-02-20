@@ -20,5 +20,9 @@ class Works extends Model
     {
         return $this->belongsTo(Users::class, 'user_id');
     }
+    public function news()
+    {
+        return $this->belongsTo(News::class, 'news_id');
+    }
 
 }

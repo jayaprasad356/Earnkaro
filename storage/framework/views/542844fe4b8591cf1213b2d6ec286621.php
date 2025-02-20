@@ -46,9 +46,7 @@
                                     <th><?php echo e(__('Name')); ?></th>
                                     <th><?php echo e(__('Mobile')); ?></th>
                                     <th><?php echo e(__('Type')); ?></th>
-                                    <th><?php echo e(__('Coins')); ?></th>
                                     <th><?php echo e(__('Amount')); ?></th>
-                                    <th><?php echo e(__('Payment Type')); ?></th>
                                     <th><?php echo e(__('Datetime')); ?></th>
                                 </tr>
                             </thead>
@@ -59,9 +57,7 @@
                                         <td><?php echo e(ucfirst($transaction->users->name ?? '')); ?></td>
                                         <td><?php echo e($transaction->users->mobile ?? ''); ?></td>
                                         <td><?php echo e($transaction->type); ?></td>
-                                        <td><?php echo e($transaction->coins); ?></td>
                                         <td><?php echo e($transaction->amount); ?></td>
-                                        <td><?php echo e($transaction->payment_type); ?></td>
                                         <td><?php echo e($transaction->datetime); ?></td>
                                     </tr>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

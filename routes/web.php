@@ -73,6 +73,7 @@ Route::get('/inactive-users/get-level-users', [InactiveUsersController::class, '
 Route::get('/inactive-users/addusers', [InactiveUsersController::class, 'addusers'])->name('inactive_users.addusers');
 Route::post('/inactive-users/register', [InactiveUsersController::class, 'register'])->name('inactive_users.register');
 Route::get('/inactive-users/activateusers', [InactiveUsersController::class, 'activateusers'])->name('inactive_users.activateusers');
+Route::get('/news/download/{id}', [NewsController::class, 'downloadImage'])->name('news.download');
 
 // Handle Image Upload (POST)
 Route::post('/works/upload', [WorksController::class, 'uploadImage'])->name('works.upload');

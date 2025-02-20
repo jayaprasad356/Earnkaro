@@ -18,7 +18,7 @@
                 <h5><?php echo e(__('Edit Settings')); ?></h5>
             </div>
             <div class="card-body">
-        <form action="<?php echo e(route('news.update', $news->id)); ?>" method="POST">
+        <form action="<?php echo e(route('news.update', $news->id)); ?>" method="POST" enctype="multipart/form-data">
             <?php echo csrf_field(); ?>
             <?php echo method_field('PUT'); ?>
             <div class="form-group">
@@ -39,6 +39,16 @@
             <div class="form-group">
                 <label for="whatsapp_status_income">Whatsapp Status Income</label>
                 <input type="number" class="form-control" id="whatsapp_status_income" name="whatsapp_status_income" value="<?php echo e($news->whatsapp_status_income); ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="download_today_image">Download Today Image</label>
+                <?php if($news->download_today_image): ?>
+                    <div class="mb-3">
+                        <img src="<?php echo e(asset('storage/app/public/' . $news->download_today_image)); ?>" alt="Current Image" class="img-thumbnail" style="max-width: 200px;">
+                    </div>
+                <?php endif; ?>
+                <input type="file" class="form-control" id="download_today_image" name="download_today_image">
             </div>
 
             <div class="box-footer">

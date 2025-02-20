@@ -1,3 +1,4 @@
+
 @extends('layouts.admin')
 
 @section('page-title')
@@ -13,13 +14,14 @@
 <div class="row">
     <div class="col-xl-12">
               <!-- Default Image Download Button -->
-              <div class="mb-3">
-            <a href="{{ asset('storage/uploads/logo/jiyo.jpeg') }}" 
-               download="default_image.jpg" 
-               class="btn btn-primary btn-sm">
-                <i class="fa fa-download"></i> {{ __('Download Default Image') }}
-            </a>
-        </div>
+              @if($news && $news->download_today_image)
+                <div class="mb-3">
+                    <a href="{{ asset('admin/storage/app/public/' . $news->download_today_image) }}" download="news_image_{{ $news->id }}.jpg">
+                        <i class="fa fa-download"></i> {{ __('Download Today Image') }}
+                    </a>
+                </div>
+            @endif
+
          <form action="{{ route('works.upload') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
