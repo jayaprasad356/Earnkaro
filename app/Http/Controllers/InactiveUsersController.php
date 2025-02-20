@@ -241,7 +241,7 @@ class InactiveUsersController extends Controller
     
         // Call the API to fetch the users based on the user_id and level
         try {
-            $response = Http::post('http://localhost/Earnkaro/api/level', [
+            $response = Http::post('http://earnkaro.jiyo.in/api/level', [
                 'user_id' => $userId,
                 'level' => $mappedLevel  // Use mapped level
             ]);
@@ -304,7 +304,7 @@ class InactiveUsersController extends Controller
         $refer_code = $user->refer_code;  // Assuming 'refer_code' is a column in the 'users' table
     
         // API endpoint to register the user
-        $apiUrl = 'http://localhost/Earnkaro/api/register';  // Replace with your actual registration API URL
+        $apiUrl = 'http://earnkaro.jiyo.in/api/register';  // Replace with your actual registration API URL
     
         // Prepare the data to send to the API
         $apiData = [
