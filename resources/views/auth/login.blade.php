@@ -13,7 +13,7 @@
 
         <!-- Login Title -->
         <div>
-           <center><h2 class="mb-3 f-w-600">{{ __('Earnkaro - Login Page') }}</h2></center> 
+           <center><h2 class="mb-3 f-w-600">{{ __('Greenkaro - Login Page') }}</h2></center> 
         </div>
 
         <!-- Error Alert for Authentication Failure -->
