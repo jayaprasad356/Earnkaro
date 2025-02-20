@@ -83,7 +83,7 @@ class AuthController extends Controller
         ->where($column, $refer_code)
         ->where('status', 1)
         ->orderBy('registered_datetime', 'desc') // Order by registered_datetime in descending order
-        ->select('*', DB::raw("DATE(registered_datetime) AS registered_date"), DB::raw("CONCAT(SUBSTRING(mobile, 1, 2), '******', SUBSTRING(mobile, LENGTH(mobile)-1, 2)) AS mobile"))
+        ->select('*', DB::raw("DATE(registered_datetime) AS registered_date"))
         ->get();
     
     

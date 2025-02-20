@@ -58,6 +58,7 @@
 $(document).ready(function() {
     var userId = "{{ Session::get('user_id') }}"; // Get user_id from the session
     var level = "{{ $level }}"; // Get the level from the Blade variable
+    var droplevel = Number(level) - 1;
     // Hide the dropdown for level 1 and show custom message instead
     if (level == 1) {
         $('#userDropdownContainer').hide(); // Hide the dropdown
@@ -73,7 +74,7 @@ $(document).ready(function() {
                 type: 'GET',
                 data: {
                     user_id: userId,
-                    level: level
+                    level: droplevel
                 },
                 success: function(response) {
                     if (response.data) {

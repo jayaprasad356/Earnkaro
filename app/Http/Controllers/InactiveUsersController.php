@@ -225,6 +225,7 @@ class InactiveUsersController extends Controller
     
         // Map levels to their corresponding names (Level C, D, E)
         $levelMapping = [
+            1 => 'b', 
             2 => 'c',  // Level 2 => Level C
             3 => 'd',  // Level 3 => Level D
             4 => 'e'   // Level 4 => Level E
