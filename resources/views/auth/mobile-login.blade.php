@@ -9,7 +9,7 @@
         </div>
 
         <div>
-            <center><h2 class="mb-3 f-w-600">{{ __('Login with Mobile') }}</h2></center> 
+            <center><h2 class="mb-3 f-w-600">{{ __('Customer Login') }}</h2></center> 
         </div>
 
         <div class="custom-login-form">
