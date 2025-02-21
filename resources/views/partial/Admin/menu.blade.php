@@ -95,15 +95,6 @@
                 </a>
                 </li>
 
-
-                <li class="dash-item">
-                <a href="{{ route('transactions.index') }}" class="dash-link">
-                    <span class="dash-micon">
-                        <i class="ti ti-credit-card"></i> <!-- Icon for transactions -->
-                    </span>
-                    <span class="dash-mtext">{{ __('Transactions') }}</span>
-                </a>
-
                 <li class="dash-item">
                 <a href="{{ route('withdrawals.index') }}" class="dash-link">
                     <span class="dash-micon">

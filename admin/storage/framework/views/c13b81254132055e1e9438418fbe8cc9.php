@@ -12,6 +12,7 @@
 
 <?php $__env->startSection('content'); ?>
 <div class="row">
+    
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body">
@@ -90,9 +91,9 @@
                                         <td><?php echo e($work->users->mobile ?? ''); ?></td>
                                         <td>
                                         <?php if($work->image): ?>
-                                            <a href="<?php echo e(('https://earnkaro.graymatterworks.com/storage/app/public/' . $work->image)); ?>" data-lightbox="image-<?php echo e($work->id); ?>">
+                                            <a href="<?php echo e(('https://greenkaro.jiyoapp.in/storage/app/public/' . $work->image)); ?>" data-lightbox="image-<?php echo e($work->id); ?>">
                                                 <img class="user-img img-thumbnail img-fluid" 
-                                                    src="<?php echo e(('https://earnkaro.graymatterworks.com/storage/app/public/' . $work->image)); ?>" 
+                                                    src="<?php echo e(('https://greenkaro.jiyoapp.in/storage/app/public/' . $work->image)); ?>" 
                                                     alt="Image" 
                                                     style="max-width: 100px; max-height: 100px;">
                                             </a>

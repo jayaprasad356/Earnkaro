@@ -43,7 +43,6 @@ class WorksController extends Controller
         return view('works.index', compact('works'));
     }
 
-
     public function bulkUpdateStatus(Request $request)
     {
         // Validate the request to ensure work IDs and status are provided
@@ -55,6 +54,30 @@ class WorksController extends Controller
     
         $status = (int) $request->new_status;
     
+        // Fetch works with user details
+        $works = Works::whereIn('id', $request->works_ids)->with('users')->get();
+    
+        foreach ($works as $work) {
+            // Prevent status change from 1 to 2 or 2 to 1
+            if (($work->status == 2 && $status == 1)) {
+                return redirect()->route('works.index')->with('success', 'Cannot Change into Verified work that is already marked as Cancelled.');
+            }
+    
+            $user = $work->users;
+    
+            if ($user && $status === 1) { // Check only if verifying (setting status to 1)
+                // Check if the user has already been verified today
+                $alreadyVerified = DB::table('transactions')
+                    ->where('user_id', $user->id)
+                    ->whereDate('datetime', now()->toDateString())
+                    ->exists();
+    
+                if ($alreadyVerified) {
+                    return redirect()->route('works.index')->with('error', 'User has already been verified today.');
+                }
+            }
+        }
+    
         // Update the status of the selected works
         Works::whereIn('id', $request->works_ids)->update(['status' => $status]);
     
@@ -62,9 +85,6 @@ class WorksController extends Controller
             // Fetch the latest or first available whatsapp_status_income from the news table
             $newsData = DB::table('news')->latest()->first(); // Get the latest record
             $amount = $newsData->whatsapp_status_income ?? 0; // Default to 0 if not found
-    
-            // Fetch works with user details
-            $works = Works::whereIn('id', $request->works_ids)->with('users')->get();
     
             foreach ($works as $work) {
                 $user = $work->users;
@@ -88,5 +108,4 @@ class WorksController extends Controller
         return redirect()->route('works.index')->with('success', 'Works status updated successfully.');
     }
     
-  
 }
