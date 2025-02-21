@@ -119,7 +119,7 @@ class InactiveUsersController extends Controller
                 if ($referralCount >= 3) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'Only 3 members are allowed in Level 1.'
+                        'message' => 'Only 3 members are allowed in Level 2.'
                     ]);
                 }
     
@@ -147,13 +147,13 @@ class InactiveUsersController extends Controller
                 }
     
                     // Check if the selected user has already referred 3 users
-                    $referralCount = Users::where('level_2_refer', $selectedLevelUser->refer_code)
+                    $referralCount = Users::where('level_1_refer', $selectedLevelUser->refer_code)
                     ->where('status', 1)
                     ->count();
                         if ($referralCount >= 3) {
                         return response()->json([
                             'success' => false,
-                            'message' => 'Only 3 members are allowed in Level 1.'
+                            'message' => 'Only 3 members are allowed in Level 3.'
                         ]);
                         }
 
@@ -182,13 +182,13 @@ class InactiveUsersController extends Controller
                 }
 
                      // Check if the selected user has already referred 3 users
-                     $referralCount = Users::where('level_3_refer', $selectedLevelUser->refer_code)
+                     $referralCount = Users::where('level_1_refer', $selectedLevelUser->refer_code)
                      ->where('status', 1)
                      ->count();
                          if ($referralCount >= 3) {
                          return response()->json([
                              'success' => false,
-                             'message' => 'Only 3 members are allowed in Level 1.'
+                             'message' => 'Only 3 members are allowed in Level 4.'
                          ]);
                          }
     
