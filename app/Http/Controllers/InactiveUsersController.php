@@ -80,13 +80,7 @@ class InactiveUsersController extends Controller
                 'message' => 'Selected user does not exist.'
             ]);
         }
-        if($selectedUser->status == 1){
-            return response()->json([
-                'success' => false,
-                'message' => 'User already activated.'
-            ]);
-        }
-    
+       
         DB::beginTransaction();
         try {
             $level = $request->query('level');
@@ -130,13 +124,18 @@ class InactiveUsersController extends Controller
                 $level1User->status = 1;
                 $level1User->refer_income += 50;
                 $level1User->save();
-    
+
+                $selectedUser->level_1_refer = $level1User->refer_code; // Assign level_1_refer from selected user
+                $selectedUser->level_2_refer = $sessionUser->refer_code; // Assign level_2_refer from Session user    
+                $selectedUser->save();
+
                 $addLevelIncome = true;
             }
-    
+
             // **Activate selected user**
             $selectedUser->status = 1;
             $selectedUser->save();
+
     
             // **Deduct balance from session user**
             $sessionUser->recharge -= 299;
@@ -242,7 +241,7 @@ class InactiveUsersController extends Controller
     
         // Call the API to fetch the users based on the user_id and level
         try {
-            $response = Http::post('https://greenkaro.jiyoapp.in/api/level', [
+            $response = Http::post('http://localhost/Earnkaro/api/level', [
                 'user_id' => $userId,
                 'level' => $mappedLevel  // Use mapped level
             ]);
@@ -332,7 +331,8 @@ class InactiveUsersController extends Controller
         
     }
     
-    
+
+
 }
     
 

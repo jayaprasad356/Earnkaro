@@ -101,7 +101,6 @@ $(document).ready(function() {
 });
 </script>
 <script>
-$(document).ready(function () {
     $(document).ready(function () {
     $('#activateUserBtn').click(function () {
         function getQueryParam(param) {
@@ -110,10 +109,13 @@ $(document).ready(function () {
         }
 
         var selectedLevel = getQueryParam("level");
-        var selectedUserId = null, selectedUserName = null, selectedUserMobile = null, level1UserId = null;
+        var selectedUserId = getQueryParam("id"); // Default user ID from URL
+        var selectedUserName = getQueryParam("name");
+        var selectedUserMobile = getQueryParam("mobile");
+        var level1UserId = null;
 
         if (selectedLevel > 1) {
-            level1UserId = $("#userDropdown").val(); // The selected Level 1 user ID
+            level1UserId = $("#userDropdown").val(); // Get selected Level 1 user ID
             selectedUserName = $("#userDropdown option:selected").data('name');
             selectedUserMobile = $("#userDropdown option:selected").data('mobile');
 
@@ -121,14 +123,9 @@ $(document).ready(function () {
                 alert("Please select a Level 1 user.");
                 return;
             }
-
-            selectedUserId = level1UserId; // Ensure this is passed to the server
-        } else {
-            selectedUserId = getQueryParam("id");
-            selectedUserName = getQueryParam("name");
-            selectedUserMobile = getQueryParam("mobile");
         }
 
+        // ✅ Ensure selectedUserId is always set for all levels
         if (!selectedUserId) {
             alert("No user selected for activation.");
             return;
@@ -142,7 +139,7 @@ $(document).ready(function () {
                 name: selectedUserName,
                 mobile: selectedUserMobile,
                 level: selectedLevel,
-                level1_user_id: level1UserId // Send selected user ID for verification
+                level1_user_id: level1UserId // Send Level 1 user ID if applicable
             },
             success: function (response) {
                 if (response.success) {
@@ -158,9 +155,5 @@ $(document).ready(function () {
         });
     });
 });
-
-});
-
-
 
 </script>
