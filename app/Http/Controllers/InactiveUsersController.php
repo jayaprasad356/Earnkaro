@@ -80,14 +80,14 @@ class InactiveUsersController extends Controller
                 'message' => 'Selected user does not exist.'
             ]);
         }
-       
+    
         DB::beginTransaction();
         try {
             $level = $request->query('level');
-            $level1User = null;
+            $selectedLevelUser = null;
             $addLevelIncome = false;
     
-            // **Level 1 Activation Check**
+            // **Level 1 Activation**
             if ($level == 1) {
                 $referralCount = Users::where('level_1_refer', $sessionUser->refer_code)
                                       ->where('status', 1)
@@ -100,96 +100,143 @@ class InactiveUsersController extends Controller
                 }
             }
     
-            // **Level 2 Activation Check**
+            // **Level 2 Activation**
             if ($level == 2) {
-                $level1UserId = $request->query('level1_user_id');
-                $level1User = Users::find($level1UserId);
+                $selectedLevelUserId = $request->query('level_user_id');
+                $selectedLevelUser = Users::find($selectedLevelUserId);
     
-                if (!$level1User) {
+                if (!$selectedLevelUser) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Selected Level 1 user does not exist.'
                     ]);
                 }
-    
-                $level1ReferralCount = Users::where('level_1_refer', $level1User->refer_code)->count();
-                if ($level1ReferralCount >= 3) {
+
+                // Check if the selected user has already referred 3 users
+                $referralCount = Users::where('level_1_refer', $selectedLevelUser->refer_code)
+                                      ->where('status', 1)
+                                      ->count();
+                if ($referralCount >= 3) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'This Level 1 user already has 3 referrals. Choose another user.'
+                        'message' => 'Only 3 members are allowed in Level 1.'
                     ]);
                 }
     
-                // **Activate Level 1 user & add refer_income**
-                $level1User->status = 1;
-                $level1User->refer_income += 50;
-                $level1User->save();
-
-                $selectedUser->level_1_refer = $level1User->refer_code; // Assign level_1_refer from selected user
-                $selectedUser->level_2_refer = $sessionUser->refer_code; // Assign level_2_refer from Session user    
+                $selectedUser->level_1_refer = $selectedLevelUser->refer_code;
+                $selectedUser->level_2_refer = $sessionUser->refer_code;
                 $selectedUser->save();
-
+    
                 $addLevelIncome = true;
+
+                // Update refer_income for selected user
+                $selectedLevelUser->refer_income += 50;
+                $selectedLevelUser->save();
+            }
+    
+            // **Level 3 Activation**
+            if ($level == 3) {
+                $selectedLevelUserId = $request->query('level_user_id');
+                $selectedLevelUser = Users::find($selectedLevelUserId);
+    
+                if (!$selectedLevelUser) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Selected Level 2 user does not exist.'
+                    ]);
+                }
+    
+                    // Check if the selected user has already referred 3 users
+                    $referralCount = Users::where('level_2_refer', $selectedLevelUser->refer_code)
+                    ->where('status', 1)
+                    ->count();
+                        if ($referralCount >= 3) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Only 3 members are allowed in Level 1.'
+                        ]);
+                        }
+
+
+                $selectedUser->level_2_refer = $selectedLevelUser->refer_code;
+                $selectedUser->level_3_refer = $sessionUser->refer_code;
+                $selectedUser->save();
+    
+                $addLevelIncome = true;
+
+                  // Update refer_income for selected user
+                  $selectedLevelUser->refer_income += 50;
+                  $selectedLevelUser->save();
             }
 
+               // **Level 3 Activation**
+               if ($level == 4) {
+                $selectedLevelUserId = $request->query('level_user_id');
+                $selectedLevelUser = Users::find($selectedLevelUserId);
+    
+                if (!$selectedLevelUser) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Selected Level 3 user does not exist.'
+                    ]);
+                }
+
+                     // Check if the selected user has already referred 3 users
+                     $referralCount = Users::where('level_3_refer', $selectedLevelUser->refer_code)
+                     ->where('status', 1)
+                     ->count();
+                         if ($referralCount >= 3) {
+                         return response()->json([
+                             'success' => false,
+                             'message' => 'Only 3 members are allowed in Level 1.'
+                         ]);
+                         }
+    
+                $selectedUser->level_3_refer = $selectedLevelUser->refer_code;
+                $selectedUser->level_4_refer = $sessionUser->refer_code;
+                $selectedUser->save();
+    
+                $addLevelIncome = true;
+
+                  // Update refer_income for selected user
+                  $selectedLevelUser->refer_income += 50;
+                  $selectedLevelUser->save();
+            }
+    
             // **Activate selected user**
             $selectedUser->status = 1;
             $selectedUser->save();
-
     
             // **Deduct balance from session user**
             $sessionUser->recharge -= 299;
     
-            // **Only add level income for Level 2 activations**
+            // **Only add level income for Levels 2 & 3 activations**
             if ($addLevelIncome) {
                 $sessionUser->level_income += 20;
             }
     
             $sessionUser->save();
     
+            // **Log Transactions**
+            DB::table('transactions')->insert([
+                'user_id' => $selectedUser->id,
+                'type' => "level{$level}_activation",
+                'amount' => 299,
+                'datetime' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
     
-            // **Log refer_income transaction for session user (Level 1 Activation)**
-            if ($level == 1) {
-
-                   // **Log transaction for selected user activation**
-                DB::table('transactions')->insert([
-                    'user_id' => $selectedUser->id,
-                    'type' => 'level1_activation',
-                    'amount' => 299,
-                    'datetime' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                DB::table('transactions')->insert([
-                    'user_id' => $sessionUser->id,
-                    'type' => 'refer_income',
-                    'amount' => 50,
-                    'datetime' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+            DB::table('transactions')->insert([
+                'user_id' => $selectedLevelUser->id,
+                'type' => 'refer_income',
+                'amount' => 50,
+                'datetime' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
     
-            // **Log transactions for Level 2 Activation**
-            if ($level == 2) {
-                DB::table('transactions')->insert([
-                    'user_id' => $level1User->id,
-                    'type' => 'level2_activation',
-                    'amount' => 299,
-                    'datetime' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-                DB::table('transactions')->insert([
-                    'user_id' => $level1User->id,
-                    'type' => 'refer_income',
-                    'amount' => 50,
-                    'datetime' => now(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-    
+            if ($addLevelIncome) {
                 DB::table('transactions')->insert([
                     'user_id' => $sessionUser->id,
                     'type' => 'level_income',
@@ -241,7 +288,7 @@ class InactiveUsersController extends Controller
     
         // Call the API to fetch the users based on the user_id and level
         try {
-            $response = Http::post('https://greenkaro.jiyoapp.in/api/level', [
+            $response = Http::post('http://localhost/Earnkaro/api/level', [
                 'user_id' => $userId,
                 'level' => $mappedLevel  // Use mapped level
             ]);

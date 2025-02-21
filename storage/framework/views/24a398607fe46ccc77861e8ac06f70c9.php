@@ -66,28 +66,26 @@ $(document).ready(function() {
         $('#activateLevelBtn').prop('disabled', true); // Disable the button since no activation can happen for level 1
     }
 
-    // Function to fetch users for a specific level via AJAX
     function fetchUsersForLevel() {
-        // Only fetch users for levels greater than 1
-        if (level > 1) {
-            $.ajax({
-                url: "<?php echo e(route('inactive_users.getLevelUsers')); ?>", // The route to your controller method
-                type: 'GET',
-                data: {
-                    user_id: userId,
-                    level: droplevel
-                },
-                success: function(response) {
-                    if (response.data) {
-                        var userDropdown = $('#userDropdown');
-                        userDropdown.empty(); // Clear the existing options
-                        
-                        $.each(response.data, function(index, user) {
-                            userDropdown.append('<option value="' + user.id + '" data-name="' + user.name + '" data-mobile="' + user.mobile + '">' + user.id + ' - ' + user.name + ' - ' + user.mobile + '</option>');
-                        });
-                    } else {
-                        alert('No users found for the selected level.');
-                    }
+    if (level > 1) {
+        $.ajax({
+            url: "<?php echo e(route('inactive_users.getLevelUsers')); ?>",
+            type: 'GET',
+            data: {
+                user_id: userId,
+                level: droplevel
+            },
+            success: function(response) {
+                if (response.data) {
+                    var userDropdown = $('#userDropdown');
+                    userDropdown.empty();
+                    
+                    $.each(response.data, function(index, user) {
+                        userDropdown.append('<option value="' + user.id + '" data-name="' + user.name + '" data-mobile="' + user.mobile + '">' + user.id + ' - ' + user.name + ' - ' + user.mobile + '</option>');
+                    });
+                } else {
+                    alert('No users found for the selected level.');
+                }
                 },
                 error: function(xhr, status, error) {
                     alert('No users found for the selected level.');
@@ -101,62 +99,61 @@ $(document).ready(function() {
 
 });
 </script>
-<SCRIPT>
-    $(document).ready(function () {
-    $('#activateUserBtn').click(function () {
-        function getQueryParam(param) {
-            var urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
+<script>
+    $(document).ready(function() {
+  $('#activateUserBtn').click(function () {
+    function getQueryParam(param) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
 
-        var selectedLevel = getQueryParam("level");
-        var selectedUserId = getQueryParam("id"); // Default user ID from URL
-        var selectedUserName = getQueryParam("name");
-        var selectedUserMobile = getQueryParam("mobile");
-        var level1UserId = null;
+    var selectedLevel = getQueryParam("level");
+    var selectedUserId = getQueryParam("id");
+    var selectedUserName = getQueryParam("name");
+    var selectedUserMobile = getQueryParam("mobile");
+    var selectedLevelUserId = null;
 
-        if (selectedLevel > 1) {
-            level1UserId = $("#userDropdown").val(); // Get selected Level 1 user ID
-            selectedUserName = $("#userDropdown option:selected").data('name');
-            selectedUserMobile = $("#userDropdown option:selected").data('mobile');
+    if (selectedLevel > 1) {
+        selectedLevelUserId = $("#userDropdown").val();
+        selectedUserName = $("#userDropdown option:selected").data('name');
+        selectedUserMobile = $("#userDropdown option:selected").data('mobile');
 
-            if (!level1UserId) {
-                alert("Please select a Level 1 user.");
-                return;
-            }
-        }
-
-        // ✅ Ensure selectedUserId is always set for all levels
-        if (!selectedUserId) {
-            alert("No user selected for activation.");
+        if (!selectedLevelUserId) {
+            alert("Please select a user from the dropdown.");
             return;
         }
+    }
 
-        $.ajax({
-            url: "<?php echo e(route('inactive_users.activateusers')); ?>",
-            type: 'GET',
-            data: {
-                id: selectedUserId,
-                name: selectedUserName,
-                mobile: selectedUserMobile,
-                level: selectedLevel,
-                level1_user_id: level1UserId // Send Level 1 user ID if applicable
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert('User activated successfully!');
-                    window.location.href = "<?php echo e(route('inactive_users.index')); ?>";
-                } else {
-                    alert('Failed to activate user. ' + response.message);
-                }
-            },
-            error: function () {
-                alert('Error activating user.');
+    if (!selectedUserId) {
+        alert("No user selected for activation.");
+        return;
+    }
+
+    $.ajax({
+        url: "<?php echo e(route('inactive_users.activateusers')); ?>",
+        type: 'GET',
+        data: {
+            id: selectedUserId,
+            name: selectedUserName,
+            mobile: selectedUserMobile,
+            level: selectedLevel,
+            level_user_id: selectedLevelUserId 
+        },
+        success: function (response) {
+            if (response.success) {
+                alert('User activated successfully!');
+                window.location.href = "<?php echo e(route('inactive_users.index')); ?>";
+            } else {
+                alert('Failed to activate user. ' + response.message);
             }
-        });
+        },
+        error: function () {
+            alert('Error activating user.');
+        }
     });
 });
 
-</SCRIPT>
+});
+</script>
 
 <?php echo $__env->make('layouts.admin', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\Earnkaro\resources\views/inactive_users/activate.blade.php ENDPATH**/ ?>
