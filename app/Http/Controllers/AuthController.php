@@ -147,9 +147,6 @@ class AuthController extends Controller
     if (empty($gender)) {
         return response()->json(['success' => false, 'message' => "gender is Empty"]);
     }
-    if (empty($level_1_refer)) {
-        return response()->json(['success' => false, 'message' => "Level 1 Refer is Empty"]);
-    }
 
 
     // Check if mobile is already registered
