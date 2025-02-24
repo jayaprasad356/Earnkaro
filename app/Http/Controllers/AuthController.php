@@ -154,6 +154,7 @@ class AuthController extends Controller
     if ($existingUser) { return response()->json(['success' => false, 'message' => "Mobile Number Already Registered"]); }
 
     // Handling referred_by logic for deeper referrals (4 levels)
+    $level_1_refer = '';
     $level_2_refer = '';
     $level_3_refer = '';
     $level_4_refer = '';
