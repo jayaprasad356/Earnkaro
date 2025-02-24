@@ -79,6 +79,13 @@
                     </a>
                 </li>
 
+                <!-- <li class="dash-item">
+                    <a href="{{ route('my_products.index') }}" class="dash-link">
+                        <span class="dash-micon"><i class="ti ti-users"></i></span> 
+                        <span class="dash-mtext">{{ __('My Products') }}</span>
+                    </a>
+                </li> -->
+
                 <li class="dash-item">
                     <a href="{{ route('invite_friends.index') }}" class="dash-link">
                         <span class="dash-micon"><i class="ti ti-user-plus"></i></span> <!-- User-plus icon for invite friends -->

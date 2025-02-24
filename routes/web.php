@@ -21,6 +21,7 @@ use App\Http\Controllers\WorksController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\InactiveUsersController;
 use App\Http\Controllers\BankDetailsController;
+use App\Http\Controllers\ProductsController;
 
 
 // use App\Http\Controllers\PlanRequestController;
@@ -63,6 +64,7 @@ Route::get('/transactions', [TransactionsController::class, 'index'])->name('tra
 Route::get('/works', [WorksController::class, 'index'])->name('works.index');
 Route::get('/withdrawals', [WithdrawalsController::class, 'index'])->name('withdrawals.index');
 Route::resource('withdrawals', WithdrawalsController::class);
+Route::resource('my_products', ProductsController::class);
 Route::get('/bankdetails/update', [BankDetailsController::class, 'showUpdateForm'])->name('bankdetails.update');
 Route::post('/bankdetails/update', [BankDetailsController::class, 'update'])->name('bankdetails.update');
 Route::post('/bankdetails/update', [BankDetailsController::class, 'update'])->name('bankdetails.update');
