@@ -57,28 +57,32 @@ class InactiveUsersController extends Controller
         $user_id = Session::get('user_id');
         $sessionUser = Users::find($user_id);
     
+        // Ensure session user exists
         if (!$sessionUser) {
             return response()->json([
                 'success' => false,
                 'message' => 'Session expired. Please log in again.'
-            ]);
+            ], 401);
         }
     
+        // Check if session user has sufficient balance
         if ($sessionUser->recharge < 299) {
             return response()->json([
                 'success' => false,
                 'message' => 'Your recharge balance is too low to activate a user.'
-            ]);
+            ], 400);
         }
     
+        // Get selected user to be activated
         $selectedUserId = $request->query('id');
         $selectedUser = Users::find($selectedUserId);
     
+        // Ensure the selected user exists
         if (!$selectedUser) {
             return response()->json([
                 'success' => false,
                 'message' => 'Selected user does not exist.'
-            ]);
+            ], 400);
         }
     
         DB::beginTransaction();
@@ -90,13 +94,13 @@ class InactiveUsersController extends Controller
             // **Level 1 Activation**
             if ($level == 1) {
                 $referralCount = Users::where('level_1_refer', $sessionUser->refer_code)
-                                      ->where('status', 1)
-                                      ->count();
+                    ->where('status', 1)
+                    ->count();
                 if ($referralCount >= 3) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Only 3 members are allowed in Level 1.'
-                    ]);
+                    ], 400);
                 }
             }
     
@@ -109,18 +113,18 @@ class InactiveUsersController extends Controller
                     return response()->json([
                         'success' => false,
                         'message' => 'Selected Level 1 user does not exist.'
-                    ]);
+                    ], 400);
                 }
-
-                // Check if the selected user has already referred 3 users
+    
+                // Check referral count
                 $referralCount = Users::where('level_1_refer', $selectedLevelUser->refer_code)
-                                      ->where('status', 1)
-                                      ->count();
+                    ->where('status', 1)
+                    ->count();
                 if ($referralCount >= 3) {
                     return response()->json([
                         'success' => false,
                         'message' => 'Only 3 members are allowed in Level 2.'
-                    ]);
+                    ], 400);
                 }
     
                 $selectedUser->level_1_refer = $selectedLevelUser->refer_code;
@@ -128,8 +132,8 @@ class InactiveUsersController extends Controller
                 $selectedUser->save();
     
                 $addLevelIncome = true;
-
-                // Update refer_income for selected user
+    
+                // Update refer_income for the level user
                 $selectedLevelUser->refer_income += 50;
                 $selectedLevelUser->save();
             }
@@ -143,34 +147,32 @@ class InactiveUsersController extends Controller
                     return response()->json([
                         'success' => false,
                         'message' => 'Selected Level 2 user does not exist.'
-                    ]);
+                    ], 400);
                 }
     
-                    // Check if the selected user has already referred 3 users
-                    $referralCount = Users::where('level_1_refer', $selectedLevelUser->refer_code)
+                $referralCount = Users::where('level_1_refer', $selectedLevelUser->refer_code)
                     ->where('status', 1)
                     ->count();
-                        if ($referralCount >= 3) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'Only 3 members are allowed in Level 3.'
-                        ]);
-                        }
-
-
+                if ($referralCount >= 3) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Only 3 members are allowed in Level 3.'
+                    ], 400);
+                }
+    
                 $selectedUser->level_2_refer = $selectedLevelUser->refer_code;
                 $selectedUser->level_3_refer = $sessionUser->refer_code;
                 $selectedUser->save();
     
                 $addLevelIncome = true;
-
-                  // Update refer_income for selected user
-                  $selectedLevelUser->refer_income += 50;
-                  $selectedLevelUser->save();
+    
+                // Update refer_income for the level user
+                $selectedLevelUser->refer_income += 50;
+                $selectedLevelUser->save();
             }
-
-               // **Level 3 Activation**
-               if ($level == 4) {
+    
+            // **Level 4 Activation**
+            if ($level == 4) {
                 $selectedLevelUserId = $request->query('level_user_id');
                 $selectedLevelUser = Users::find($selectedLevelUserId);
     
@@ -178,29 +180,28 @@ class InactiveUsersController extends Controller
                     return response()->json([
                         'success' => false,
                         'message' => 'Selected Level 3 user does not exist.'
-                    ]);
+                    ], 400);
                 }
-
-                     // Check if the selected user has already referred 3 users
-                     $referralCount = Users::where('level_1_refer', $selectedLevelUser->refer_code)
-                     ->where('status', 1)
-                     ->count();
-                         if ($referralCount >= 3) {
-                         return response()->json([
-                             'success' => false,
-                             'message' => 'Only 3 members are allowed in Level 4.'
-                         ]);
-                         }
+    
+                $referralCount = Users::where('level_1_refer', $selectedLevelUser->refer_code)
+                    ->where('status', 1)
+                    ->count();
+                if ($referralCount >= 3) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Only 3 members are allowed in Level 4.'
+                    ], 400);
+                }
     
                 $selectedUser->level_3_refer = $selectedLevelUser->refer_code;
                 $selectedUser->level_4_refer = $sessionUser->refer_code;
                 $selectedUser->save();
     
                 $addLevelIncome = true;
-
-                  // Update refer_income for selected user
-                  $selectedLevelUser->refer_income += 50;
-                  $selectedLevelUser->save();
+    
+                // Update refer_income for the level user
+                $selectedLevelUser->refer_income += 50;
+                $selectedLevelUser->save();
             }
     
             // **Activate selected user**
@@ -210,7 +211,7 @@ class InactiveUsersController extends Controller
             // **Deduct balance from session user**
             $sessionUser->recharge -= 299;
     
-            // **Only add level income for Levels 2 & 3 activations**
+            // **Only add level income for Levels 2 & above activations**
             if ($addLevelIncome) {
                 $sessionUser->level_income += 20;
             }
@@ -227,14 +228,16 @@ class InactiveUsersController extends Controller
                 'updated_at' => now(),
             ]);
     
-            DB::table('transactions')->insert([
-                'user_id' => $selectedLevelUser->id,
-                'type' => 'refer_income',
-                'amount' => 50,
-                'datetime' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            if ($selectedLevelUser) {
+                DB::table('transactions')->insert([
+                    'user_id' => $selectedLevelUser->id,
+                    'type' => 'refer_income',
+                    'amount' => 50,
+                    'datetime' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
     
             if ($addLevelIncome) {
                 DB::table('transactions')->insert([
@@ -253,16 +256,15 @@ class InactiveUsersController extends Controller
                 'success' => true,
                 'message' => 'User activated successfully.'
             ]);
+    
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred: ' . $e->getMessage()
-            ]);
+            ], 500);
         }
     }
-    
-    
     
     public function getLevelUsers(Request $request)
     {
