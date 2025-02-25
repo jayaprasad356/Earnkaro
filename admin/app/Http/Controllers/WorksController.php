@@ -69,6 +69,7 @@ class WorksController extends Controller
                 // Check if the user has already been verified today
                 $alreadyVerified = DB::table('transactions')
                     ->where('user_id', $user->id)
+                    ->where('type', 'whatsapp_status_income')
                     ->whereDate('datetime', now()->toDateString())
                     ->exists();
     
