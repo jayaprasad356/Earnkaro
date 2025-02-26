@@ -102,6 +102,16 @@ class InactiveUsersController extends Controller
                         'message' => 'Only 3 members are allowed in Level 1.'
                     ], 400);
                 }
+
+                DB::table('transactions')->insert([
+                    'user_id' => $sessionUser->id,
+                    'type' => 'refer_income',
+                    'amount' => 50,
+                    'datetime' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                
             }
     
             // **Level 2 Activation**
@@ -206,7 +216,9 @@ class InactiveUsersController extends Controller
     
             // **Activate selected user**
             $selectedUser->status = 1;
+            $sessionUser->refer_income += 50;
             $selectedUser->save();
+            
     
             // **Deduct balance from session user**
             $sessionUser->recharge -= 299;
