@@ -79,12 +79,12 @@
                     </a>
                 </li>
 
-                <!-- <li class="dash-item">
+                <li class="dash-item">
                     <a href="<?php echo e(route('my_products.index')); ?>" class="dash-link">
                         <span class="dash-micon"><i class="ti ti-users"></i></span> 
                         <span class="dash-mtext"><?php echo e(__('My Products')); ?></span>
                     </a>
-                </li> -->
+                </li>
 
                 <li class="dash-item">
                     <a href="<?php echo e(route('invite_friends.index')); ?>" class="dash-link">

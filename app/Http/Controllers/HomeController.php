@@ -78,7 +78,7 @@ class HomeController extends Controller
         $amount = floatval($request->input('amount')); // Amount to be added
     
         if ($amount <= 0) {
-            return response()->json(['success' => false, 'message' => 'Invalid amount']);
+            return response()->json(['success' => false, 'message' => 'No Balance Available']);
         }
     
         // Check if enough funds exist before subtracting

@@ -39,6 +39,7 @@
     }
 </style>
 
+<h3>My Products</h3>
 <div class="row">
     <?php
         $products = [
