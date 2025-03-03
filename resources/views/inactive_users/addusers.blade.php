@@ -61,9 +61,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="referred_by">{{ __('Referred By') }}</label>
-                        <input type="text" class="form-control" id="referred_by" name="referred_by" value="{{ $refer_code }}" disabled>
-                        @error('referred_by') <span class="text-danger">{{ $message }}</span> @enderror
+                        <label for="level_1_refer">{{ __('Level 1 Refer') }}</label>
+                        <input type="text" class="form-control" id="level_1_refer" name="level_1_refer" value="{{ $refer_code }}" disabled>
+                        @error('level_1_refer') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="form-group text-end">
